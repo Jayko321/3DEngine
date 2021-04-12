@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="14">
+      <module name="colt" target="11" />
+      <module name="colt.jmh" target="11" />
+      <module name="colt.main" target="11" />
+      <module name="colt.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
