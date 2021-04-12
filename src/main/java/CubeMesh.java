@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -17,32 +18,64 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45.glCreateBuffers;
 
-public class Cube {
+public class CubeMesh {
 
 
 
-    public static class data{
+    public static class Cube {
         float size = 1f;
         Vec3 position = new Vec3(0,0,0);
+        float[] vertices;
+        float X = position.getX();
+        float Y = position.getY();
+        float Z = position.getZ();
 
-        data(Vec3 pos){
-
+        Cube(Vec3 pos){
             this.position = Objects.requireNonNullElseGet(pos, () -> new Vec3(1, 1, 1));
-            this.vertices = generateVertices(this.position);
-            this.generateIndices();
-
-
+            genVertices();
         }
-        data(){
-            this.vertices = generateVertices(this.position);
-            this.generateIndices();
+        Cube(){
+            genVertices();
         }
 
+        private void genVertices() {
+            this.vertices = new float[]{
+                    0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
+                    size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
+                    size + X, size + Y, 0.0f + Z, 1.0f, 1.0f,
+                    0.0f + X, size + Y, 0.0f + Z, 0.0f, 1.0f,
 
+                    0.0f + X, 0.0f + Y, size + Z, 0.0f, 0.0f,
+                    size + X, 0.0f + Y, size + Z, 1.0f, 0.0f,
+                    size + X, size + Y, size + Z, 1.0f, 1.0f,
+                    0.0f + X, size + Y, size + Z, 0.0f, 1.0f,
 
+                    0.0f + X, size + Y, size + Z, 0.0f, 0.0f,
+                    0.0f + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
+                    0.0f + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
+                    0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
 
+                    size + X, size + Y, size + Z, 0.0f, 0.0f,
+                    size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
+                    size + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
+                    size + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
 
+                    0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
+                    size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
+                    size + X, 0.0f + Y, size + Z, 1.0f, 1.0f,
+                    0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
 
+                    0.0f + X, size + Y, 0.0f + Z, 0.0f, 0.0f,
+                    size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
+                    size + X, size + Y, size + Z, 1.0f, 1.0f,
+                    0.0f + X, size + Y, size + Z, 0.0f, 1.0f
+            };
+            this.genIndices();
+        }
+
+        public float[] getVertices(){
+            return vertices;
+        }
 
 
         public int[] indices = new int[]{
@@ -50,63 +83,7 @@ public class Cube {
                 2,3,0
         };
 
-        public float[] vertices;
-
-
-
-
-
-        float[] generateVertices(Vec3 pos){
-
-            float X = -pos.getX();
-            float Y = -pos.getY();
-            float Z = pos.getZ();
-            return ArrayUtils.addAll(this.vertices,
-                    0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
-                    size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
-                    size + X, size + Y, 0.0f + Z, 1.0f, 1.0f,
-//                size + X, size + Y, 0.0f + Z,  1.0f, 1.0f,
-                    0.0f + X, size + Y, 0.0f + Z, 0.0f, 1.0f,
-//                0.0f + X, 0.0f + Y, 0.0f + Z,  0.0f, 0.0f,
-//
-                    0.0f + X, 0.0f + Y, size + Z, 0.0f, 0.0f,
-                    size + X, 0.0f + Y, size + Z, 1.0f, 0.0f,
-                    size + X, size + Y, size + Z, 1.0f, 1.0f,
-//                size + X, size + Y, size + Z,  1.0f, 1.0f,
-                    0.0f + X, size + Y, size + Z, 0.0f, 1.0f,
-//                0.0f + X, 0.0f + Y, size + Z,  0.0f, 0.0f,
-//
-                    0.0f + X, size + Y, size + Z, 0.0f, 0.0f,
-                    0.0f + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                    0.0f + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
-//                0.0f + X, 0.0f + Y, 0.0f + Z,  0.0f, 1.0f,
-                    0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
-//                0.0f + X, size + Y, size + Z,  1.0f, 0.0f,
-//
-                    size + X, size + Y, size + Z, 0.0f, 0.0f,
-                    size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                    size + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
-//                size + X, 0.0f + Y, 0.0f + Z,  0.0f, 1.0f,
-                    size + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
-//                size + X, size + Y, size + Z,  1.0f, 0.0f,
-//
-                    0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
-                    size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
-                    size + X, 0.0f + Y, size + Z, 1.0f, 1.0f,
-//                size + X, 0.0f + Y, size + Z,  1.0f, 0.0f,
-                    0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
-//                0.0f + X, 0.0f + Y, 0.0f + Z,  0.0f, 1.0f,
-//
-                    0.0f + X, size + Y, 0.0f + Z, 0.0f, 0.0f,
-                    size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                    size + X, size + Y, size + Z, 1.0f, 1.0f,
-//                size + X, size + Y, size + Z,  1.0f, 0.0f,
-                    0.0f + X, size + Y, size + Z, 0.0f, 1.0f
-//                0.0f + X, size + Y, 0.0f + Z,  0.0f, 1.0f
-            );
-        }
-
-        void generateIndices(){
+        void genIndices(){
             for (int i = 0; i+4 < this.vertices.length/5; i+=4) {
                 int last = this.indices[this.indices.length-1] + 4;
                 this.indices = ArrayUtils.addAll(this.indices, last, last + 1 , last + 2, last+2 , last+3, last);
@@ -117,41 +94,50 @@ public class Cube {
     }
 
     private int VAO,VBO,IBO;
+    private ArrayList<Float> verticesMesh = new ArrayList<Float>();
+    private ArrayList<Float> indicesMesh = new ArrayList<Float>();
     private int texture;
-    private data Data;
+    private int lastCube = 0;
+    private Cube[] Cubes = new Cube[1];
     private final Shader Shader;
 
-    public Cube(String texturePath, Shader shader){
+
+    public CubeMesh(String texturePath, Shader shader){
         Shader = shader;
         GL.createCapabilities();
-        this.Data = new data();
+
 //        this.addCube(new Vec3(1,1,0));
 
         setTexture(texturePath);
-
     }
 
     void addCube(Vec3 Pos){
-        float[] arr = Data.generateVertices(Pos);
-
-        Data.vertices = ArrayUtils.addAll(Data.vertices, arr);
-        Data.generateIndices();
+        this.Cubes[lastCube] = new Cube(Pos);
+        lastCube++;
+        genMeshes();
     }
 
     void addCube(Vec3[] Pos){
         for(Vec3 pos : Pos){
-            float[] arr = new data(pos).vertices;
-            System.out.println("ayee");
-
-            Data.vertices = ArrayUtils.addAll(Data.vertices, arr);
-            Data.generateIndices();
+            this.Cubes[lastCube] = new Cube(pos);
+            lastCube++;
         }
-
+        genMeshes();
     }
 
 
+    void genMeshes(){
 
+        for (Cube Cube : Cubes) {
+            for (float v : Cube.getVertices()){
+                verticesMesh.add(v);
+            }
+            for (float i : Cube.indices){
+                indicesMesh.add(i);
+            }
 
+        }
+    }
 
     private void setTexture(String texturePath){
         int[] width = new int[1], height = new int[1], channels = new int[1];
@@ -180,10 +166,12 @@ public class Cube {
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, this.Data.vertices, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesMesh.toArray(new Float[0])), GL_DYNAMIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.Data.indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesMesh.toArray(new Float[0])), GL_STATIC_DRAW);
+
+
 
         int SIZEOF_FLOAT = 4;
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * SIZEOF_FLOAT, 0);
@@ -221,7 +209,7 @@ public class Cube {
 //            glUniformMatrix4fv(modelLoc, false, model.getArray());
 //            glDrawArrays(GL_TRIANGLES, 0, 72);
 //        }
-        glDrawElements(GL_TRIANGLES, this.Data.indices.length, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indicesMesh.size(), GL_UNSIGNED_INT, 0);
 //        glDrawArrays(GL_TRIANGLES, 0, 72);
 
 

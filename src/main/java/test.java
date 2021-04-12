@@ -1,19 +1,10 @@
 import glm_.mat4x4.Mat4;
 import glm_.vec3.Vec3;
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
-import org.lwjgl.stb.STBImage;
-import glm_.*;
-
-
-
 
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -57,7 +48,7 @@ public class test {
         key_callback(camera);
         mouse_callback();
 
-        Cube cube = new Cube("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
+        CubeMesh cube = new CubeMesh("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
 
         glViewport(0, 0, w, h);
 
@@ -79,7 +70,7 @@ public class test {
 //            }
 //        }
 
-        cube.addCube(new Vec3[]{new Vec3(1, 1, 1), new Vec3(0,0,0),new Vec3(1,1,2)});
+        cube.addCube(new Vec3[]{new Vec3(1, 1, 1)});
         glfwSwapInterval(0);
 
         while (!glfwWindowShouldClose(window)) {
