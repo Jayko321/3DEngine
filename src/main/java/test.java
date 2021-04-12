@@ -72,12 +72,12 @@ public class test {
         }
 
 
-        for (Vec3[][] i: tmp){
-            for(Vec3[] z: i){
-                System.out.println(Arrays.toString(z));
-                cube.addCube(z);
-            }
-        }
+//        for (Vec3[][] i: tmp){
+//            for(Vec3[] z: i){
+//                System.out.println(Arrays.toString(z));
+//                cube.addCube(z);
+//            }
+//        }
 
         cube.addCube(new Vec3[]{new Vec3(1, 1, 1), new Vec3(0,0,0),new Vec3(1,1,2)});
         glfwSwapInterval(0);
