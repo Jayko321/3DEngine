@@ -36,15 +36,16 @@ public class test {
             cleanup();
             throw new RuntimeException("sucks");
         }
-        glfwFocusWindow(window);
+//        glfwFocusWindow(window);
 
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         Shader shader = new Shader("D:\\3DEngine\\src\\main\\java\\vertexShader.glsl",
                 "D:\\3DEngine\\src\\main\\java\\fragmentShader.glsl");
         Camera camera = new Camera(window, shader, w, h);
+        error_catching();
         key_callback(camera);
         mouse_callback();
 
@@ -72,13 +73,13 @@ public class test {
 
         cube.addCube(new Vec3[]{new Vec3(1, 1, 1)});
         glfwSwapInterval(0);
-
+        int a = 0;
         while (!glfwWindowShouldClose(window)) {
             float curFrame = (float) glfwGetTime();
 
             deltaTime = curFrame - lastFrame;
             lastFrame = curFrame;
-            System.out.println(1 / deltaTime);
+//            System.out.println(1 / deltaTime);
             glfwPollEvents();
 
             //начало отрисовки
@@ -86,8 +87,13 @@ public class test {
             GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+//            System.out.println(glGetError());
             cube.draw();
+
+//            if (a == 2){
+//                System.exit(0);
+//            }
+            a++;
             shader.Use();
             camera.Use();
             camera.do_movement(keys, deltaTime);
@@ -118,6 +124,14 @@ public class test {
             }
         );
     }
+
+    void error_catching(){
+        glDebugMessageCallback((source, type, id, severity, length, message, userParam)->{
+            String text = String.format("\"GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\\n\"", ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),type,severity, message);
+            System.out.println(text);
+        },0);
+    }
+
 
     void mouse_callback(){
         glfwSetCursorPos(window, lastX, lastY);

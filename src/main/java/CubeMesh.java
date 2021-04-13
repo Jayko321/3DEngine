@@ -98,7 +98,7 @@ public class CubeMesh {
     private ArrayList<Float> indicesMesh = new ArrayList<Float>();
     private int texture;
     private int lastCube = 0;
-    private Cube[] Cubes = new Cube[1];
+    private Cube[] Cubes = new Cube[1000];
     private final Shader Shader;
 
 
@@ -129,6 +129,9 @@ public class CubeMesh {
     void genMeshes(){
 
         for (Cube Cube : Cubes) {
+            if (Cube == null){
+                break;
+            }
             for (float v : Cube.getVertices()){
                 verticesMesh.add(v);
             }
@@ -169,7 +172,7 @@ public class CubeMesh {
         glBufferData(GL_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesMesh.toArray(new Float[0])), GL_DYNAMIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesMesh.toArray(new Float[0])), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArrayUtils.toPrimitive(indicesMesh.toArray(new Float[0])), GL_STATIC_DRAW);
 
 
 
@@ -179,6 +182,8 @@ public class CubeMesh {
         glVertexAttribPointer(2, 2, GL_FLOAT, false, 5 * SIZEOF_FLOAT, 12);
         glEnableVertexAttribArray(2);
         glBindVertexArray(0);
+
+
     }
 
 //    public void draw(@Nullable Vec3 Pos){
@@ -200,6 +205,7 @@ public class CubeMesh {
     public void draw(){
         prepareShape();
         glBindTexture(GL_TEXTURE_2D, texture);
+
         glBindVertexArray(VAO);
         int modelLoc = glGetUniformLocation(Shader.Program, "model");
 
@@ -210,10 +216,12 @@ public class CubeMesh {
 //            glDrawArrays(GL_TRIANGLES, 0, 72);
 //        }
         glDrawElements(GL_TRIANGLES, indicesMesh.size(), GL_UNSIGNED_INT, 0);
+
 //        glDrawArrays(GL_TRIANGLES, 0, 72);
 
 
         glBindVertexArray(0);
+
     }
 
 }
