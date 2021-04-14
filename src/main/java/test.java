@@ -2,9 +2,11 @@ import glm_.mat4x4.Mat4;
 import glm_.vec3.Vec3;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
+import org.lwjgl.system.Callback;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -26,7 +28,7 @@ public class test {
         }
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
@@ -45,46 +47,53 @@ public class test {
         Shader shader = new Shader("D:\\3DEngine\\src\\main\\java\\vertexShader.glsl",
                 "D:\\3DEngine\\src\\main\\java\\fragmentShader.glsl");
         Camera camera = new Camera(window, shader, w, h);
-        error_catching();
+//        error_catching();
         key_callback(camera);
         mouse_callback();
 
         CubeMesh cube = new CubeMesh("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
+        CubeMesh cube1 = new CubeMesh("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
 
         glViewport(0, 0, w, h);
 
-        Vec3[][][] tmp = new Vec3[16][16][128];
+        Vec3[][] tmp = new Vec3[16][16];
+        Vec3[][] tmp1 = new Vec3[16][16];
 
         for (int z = 0; z < 16; z++) {
             for (int x = 0; x < 16; x++) {
-                for (int y = 0; y < 128; y++) {
-                    tmp[z][x][y] = new Vec3(x,y,z);
-                }
+
+                tmp[z][x] = new Vec3(x,0,z);
+                tmp1[z][x] = new Vec3(x,1,z);
             }
         }
 
+        for(Vec3[] z: tmp) {
+            cube.addCube(z);
 
-//        for (Vec3[][] i: tmp){
-//            for(Vec3[] z: i){
-//                System.out.println(Arrays.toString(z));
-//                cube.addCube(z);
-//            }
-//        }
+            System.out.println("aye");
+        }
+        for(Vec3[] z: tmp1) {
+            cube.addCube(z);
 
-        cube.addCube(new Vec3[]{new Vec3(1, 1, 1)});
-        glfwSwapInterval(0);
+            System.out.println("aye1");
+        }
+
+
+//        cube.addCube(new Vec3[]{new Vec3(1, 1, 1)});
+        cube.addCube(new Vec3(2,2,2), new Vec3(0,0,0));
+        glEnable(GL_DEPTH_TEST);
+        GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+//        glfwSwapInterval(0);
         int a = 0;
         while (!glfwWindowShouldClose(window)) {
             float curFrame = (float) glfwGetTime();
 
             deltaTime = curFrame - lastFrame;
             lastFrame = curFrame;
-//            System.out.println(1 / deltaTime);
+            System.out.println(1 / deltaTime);
             glfwPollEvents();
 
             //начало отрисовки
-            glEnable(GL_DEPTH_TEST);
-            GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //            System.out.println(glGetError());
@@ -155,10 +164,11 @@ public class test {
     }
 
 
-    public static void cleanup() {
+    public void cleanup() {
         glDeleteVertexArrays(VAO);
         glDeleteBuffers(VBO);
         glfwDestroyWindow(window);
+        glfwMakeContextCurrent(NULL);
         glfwTerminate();
     }
 

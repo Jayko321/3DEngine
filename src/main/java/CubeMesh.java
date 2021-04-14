@@ -8,6 +8,7 @@ import org.lwjgl.stb.STBImage;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -24,14 +25,12 @@ public class CubeMesh {
 
     public static class Cube {
         float size = 1f;
-        Vec3 position = new Vec3(0,0,0);
+        Vec3 position;
         float[] vertices;
-        float X = position.getX();
-        float Y = position.getY();
-        float Z = position.getZ();
+
 
         Cube(Vec3 pos){
-            this.position = Objects.requireNonNullElseGet(pos, () -> new Vec3(1, 1, 1));
+            this.position = pos;
             genVertices();
         }
         Cube(){
@@ -39,6 +38,9 @@ public class CubeMesh {
         }
 
         private void genVertices() {
+            float X = position.getX();
+            float Y = position.getY();
+            float Z = position.getZ();
             this.vertices = new float[]{
                     0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
                     size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
@@ -70,7 +72,6 @@ public class CubeMesh {
                     size + X, size + Y, size + Z, 1.0f, 1.0f,
                     0.0f + X, size + Y, size + Z, 0.0f, 1.0f
             };
-            this.genIndices();
         }
 
         public float[] getVertices(){
@@ -83,32 +84,35 @@ public class CubeMesh {
                 2,3,0
         };
 
-        void genIndices(){
-            for (int i = 0; i+4 < this.vertices.length/5; i+=4) {
-                int last = this.indices[this.indices.length-1] + 4;
-                this.indices = ArrayUtils.addAll(this.indices, last, last + 1 , last + 2, last+2 , last+3, last);
-            }
-        }
+
 
 
     }
 
     private int VAO,VBO,IBO;
     private ArrayList<Float> verticesMesh = new ArrayList<Float>();
-    private ArrayList<Float> indicesMesh = new ArrayList<Float>();
+    private ArrayList<Integer> indicesMesh = new ArrayList<Integer>();
     private int texture;
     private int lastCube = 0;
-    private Cube[] Cubes = new Cube[1000];
-    private final Shader Shader;
+    private Cube[] Cubes = new Cube[1000000];
 
 
     public CubeMesh(String texturePath, Shader shader){
-        Shader = shader;
         GL.createCapabilities();
+
 
 //        this.addCube(new Vec3(1,1,0));
 
         setTexture(texturePath);
+    }
+
+    List<Integer> genIndices(List<Float> vertices){
+        ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 2, 3, 0));
+        for (int i = 0; i+4 < vertices.size()/5; i+=4) {
+            int last = indices.get(indices.size() - 1) + 4;
+            indices.addAll(Arrays.asList(last, last + 1 , last + 2, last+2 , last+3, last));
+        }
+        return indices;
     }
 
     void addCube(Vec3 Pos){
@@ -117,12 +121,13 @@ public class CubeMesh {
         genMeshes();
     }
 
-    void addCube(Vec3[] Pos){
+    void addCube(Vec3 ... Pos){
         for(Vec3 pos : Pos){
             this.Cubes[lastCube] = new Cube(pos);
             lastCube++;
         }
         genMeshes();
+        prepareShape();
     }
 
 
@@ -135,11 +140,8 @@ public class CubeMesh {
             for (float v : Cube.getVertices()){
                 verticesMesh.add(v);
             }
-            for (float i : Cube.indices){
-                indicesMesh.add(i);
-            }
-
         }
+        indicesMesh.addAll(genIndices(verticesMesh));
     }
 
     private void setTexture(String texturePath){
@@ -159,20 +161,25 @@ public class CubeMesh {
 
 
     private void prepareShape() {
-        VBO = glGenBuffers();
-
+        if (VBO == 0){
+            VBO = glGenBuffers();
+        }
+        if (IBO == 0){
+            IBO = glGenBuffers();
+        }
+        if (VAO == 0){
+            VAO = glGenVertexArrays();
+        }
 //        System.out.println(Arrays.toString(this.Data.indices));
 //        Data.addCube(new Vec3(0, 2, 0));
-        VAO = glGenVertexArrays();
-        IBO = glGenBuffers();
 
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesMesh.toArray(new Float[0])), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesMesh.toArray(new Float[0])), GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArrayUtils.toPrimitive(indicesMesh.toArray(new Float[0])), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArrayUtils.toPrimitive(indicesMesh.toArray(new Integer[0])), GL_STATIC_DRAW);
 
 
 
@@ -182,7 +189,6 @@ public class CubeMesh {
         glVertexAttribPointer(2, 2, GL_FLOAT, false, 5 * SIZEOF_FLOAT, 12);
         glEnableVertexAttribArray(2);
         glBindVertexArray(0);
-
 
     }
 
@@ -203,11 +209,10 @@ public class CubeMesh {
 //    }
 
     public void draw(){
-        prepareShape();
-        glBindTexture(GL_TEXTURE_2D, texture);
 
+        glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
-        int modelLoc = glGetUniformLocation(Shader.Program, "model");
+//        int modelLoc = glGetUniformLocation(Shader.Program, "model");
 
 //        for(Vec3 Pos: Positions){
 //            Mat4 model;
