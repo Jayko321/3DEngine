@@ -26,7 +26,15 @@ public class CubeMesh {
     public static class Cube {
         float size = 1f;
         Vec3 position;
-        float[] vertices;
+        ArrayList<Float> vertices;
+        public enum edges{
+            RIGHT,
+            LEFT,
+            TOP,
+            BOTTOM,
+            FRONT,
+            BACK
+        };
 
 
         Cube(Vec3 pos){
@@ -38,63 +46,69 @@ public class CubeMesh {
         }
 
         private void genVertices() {
-            float X = position.getX();
-            float Y = position.getY();
+            float X = -position.getX();
+            float Y = -position.getY();
             float Z = position.getZ();
-            this.vertices = new float[]{
+            this.vertices = new ArrayList<>(Arrays.asList(//back
                     0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
                     size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
                     size + X, size + Y, 0.0f + Z, 1.0f, 1.0f,
                     0.0f + X, size + Y, 0.0f + Z, 0.0f, 1.0f,
-
+                    //front
                     0.0f + X, 0.0f + Y, size + Z, 0.0f, 0.0f,
                     size + X, 0.0f + Y, size + Z, 1.0f, 0.0f,
                     size + X, size + Y, size + Z, 1.0f, 1.0f,
                     0.0f + X, size + Y, size + Z, 0.0f, 1.0f,
-
+                    //right
                     0.0f + X, size + Y, size + Z, 0.0f, 0.0f,
                     0.0f + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
                     0.0f + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
                     0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
-
+                    //left
                     size + X, size + Y, size + Z, 0.0f, 0.0f,
                     size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
                     size + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
                     size + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
-
+                    //top
                     0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
                     size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
                     size + X, 0.0f + Y, size + Z, 1.0f, 1.0f,
                     0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f,
-
+                    //bottom
                     0.0f + X, size + Y, 0.0f + Z, 0.0f, 0.0f,
                     size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
                     size + X, size + Y, size + Z, 1.0f, 1.0f,
-                    0.0f + X, size + Y, size + Z, 0.0f, 1.0f
-            };
+                    0.0f + X, size + Y, size + Z, 0.0f, 1.0f)
+
+            );
         }
 
-        public float[] getVertices(){
+        public void hideEdge(edges edge){
+            switch (edge){
+                case BACK -> {
+                    for (int i = 0; i <= 20; i++) {
+                        this.vertices.remove(i);
+                    }
+                }
+                case FRONT -> {
+                    for(int i = 20;i <= 40;i++){
+                        this.vertices.remove(i);
+                    }
+                }
+
+            }
+        }
+
+        public ArrayList<Float> getVertices(){
             return vertices;
         }
-
-
-        public int[] indices = new int[]{
-                0,1,2,
-                2,3,0
-        };
-
-
-
-
     }
 
     private int VAO,VBO,IBO;
     private ArrayList<Float> verticesMesh = new ArrayList<Float>();
     private ArrayList<Integer> indicesMesh = new ArrayList<Integer>();
     private int texture;
-    private int lastCube = 0;
-    private Cube[] Cubes = new Cube[1000000];
+    private ArrayList<Cube> Cubes = new ArrayList<>(128);
 
 
     public CubeMesh(String texturePath, Shader shader){
@@ -108,7 +122,7 @@ public class CubeMesh {
 
     List<Integer> genIndices(List<Float> vertices){
         ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 2, 3, 0));
-        for (int i = 0; i+4 < vertices.size()/5; i+=4) {
+        for (int i = 0; i+4 <= vertices.size()/5; i+=4) {
             int last = indices.get(indices.size() - 1) + 4;
             indices.addAll(Arrays.asList(last, last + 1 , last + 2, last+2 , last+3, last));
         }
@@ -116,15 +130,19 @@ public class CubeMesh {
     }
 
     void addCube(Vec3 Pos){
-        this.Cubes[lastCube] = new Cube(Pos);
-        lastCube++;
+        Cubes.add(new Cube(Pos));
+        Cubes.get(0).hideEdge(Cube.edges.BACK);
+//        Cubes.get(0).genIndices();
+
         genMeshes();
+        prepareShape();
+        System.out.println(Cubes.get(0).getVertices());
+        System.out.println(indicesMesh);
     }
 
     void addCube(Vec3 ... Pos){
         for(Vec3 pos : Pos){
-            this.Cubes[lastCube] = new Cube(pos);
-            lastCube++;
+            Cubes.add(new Cube(pos));
         }
         genMeshes();
         prepareShape();
@@ -137,9 +155,7 @@ public class CubeMesh {
             if (Cube == null){
                 break;
             }
-            for (float v : Cube.getVertices()){
-                verticesMesh.add(v);
-            }
+            verticesMesh.addAll(Cube.getVertices());
         }
         indicesMesh.addAll(genIndices(verticesMesh));
     }

@@ -67,20 +67,20 @@ public class test {
             }
         }
 
-        for(Vec3[] z: tmp) {
-            cube.addCube(z);
-
-            System.out.println("aye");
-        }
-        for(Vec3[] z: tmp1) {
-            cube.addCube(z);
-
-            System.out.println("aye1");
-        }
+//        for(Vec3[] z: tmp) {
+//            cube.addCube(z);
+//
+//            System.out.println("aye");
+//        }
+//        for(Vec3[] z: tmp1) {
+//            cube.addCube(z);
+//
+//            System.out.println("aye1");
+//        }
 
 
 //        cube.addCube(new Vec3[]{new Vec3(1, 1, 1)});
-        cube.addCube(new Vec3(2,2,2), new Vec3(0,0,0));
+        cube.addCube(new Vec3(0,0,-2));
         glEnable(GL_DEPTH_TEST);
         GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 //        glfwSwapInterval(0);
