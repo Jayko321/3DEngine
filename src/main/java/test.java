@@ -1,12 +1,11 @@
 import glm_.mat4x4.Mat4;
 import glm_.vec3.Vec3;
+import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
-import org.lwjgl.system.Callback;
 
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -51,39 +50,42 @@ public class test {
         key_callback(camera);
         mouse_callback();
 
-        CubeMesh cube = new CubeMesh("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
-        CubeMesh cube1 = new CubeMesh("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
+        CubeBatch cubes = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
+        CubeBatch cube1 = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
 
         glViewport(0, 0, w, h);
 
-        Vec3[][] tmp = new Vec3[16][16];
-        Vec3[][] tmp1 = new Vec3[16][16];
+        Vec3i[][] tmp = new Vec3i[16][16];
+        Vec3i[][] tmp1 = new Vec3i[16][16];
 
         for (int z = 0; z < 16; z++) {
             for (int x = 0; x < 16; x++) {
 
-                tmp[z][x] = new Vec3(x,0,z);
-                tmp1[z][x] = new Vec3(x,1,z);
+                tmp[z][x] = new Vec3i(x,0,z);
+                tmp1[z][x] = new Vec3i(x,1,z);
             }
         }
 
-//        for(Vec3[] z: tmp) {
-//            cube.addCube(z);
-//
-//            System.out.println("aye");
-//        }
-//        for(Vec3[] z: tmp1) {
-//            cube.addCube(z);
-//
-//            System.out.println("aye1");
-//        }
+        for(Vec3i[] z: tmp) {
+            cubes.addCube(z);
 
+            System.out.println("aye");
+        }
+        for(Vec3i[] z: tmp1) {
+            cubes.addCube(z);
 
-//        cube.addCube(new Vec3[]{new Vec3(1, 1, 1)});
-        cube.addCube(new Vec3(0,0,-2));
+            System.out.println("aye1");
+        }
+
+//        cubes.addCube(new Vec3i(1,1,1),new Vec3i(2,1,1), new Vec3i(1,1,0), new Vec3i(1,1,2));
+//        cubes.addCube(new Vec3i(1,2,1),new Vec3i(2,2,1), new Vec3i(1,2,0), new Vec3i(1,2,2));
+
+//        cubes.addCube(new Vec3i(0,0,-2),new Vec3i(1,0,-2),new Vec3i(0,1,-2),new Vec3i(0,0,-1),new Vec3i(0,0,-3),
+//                new Vec3i(-1,0,-2), new Vec3i(0,-1,-2));
         glEnable(GL_DEPTH_TEST);
         GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-//        glfwSwapInterval(0);
+        glfwSwapInterval(0);
+        cubes.func();
         int a = 0;
         while (!glfwWindowShouldClose(window)) {
             float curFrame = (float) glfwGetTime();
@@ -97,7 +99,7 @@ public class test {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //            System.out.println(glGetError());
-            cube.draw();
+            cubes.draw();
 
 //            if (a == 2){
 //                System.exit(0);
