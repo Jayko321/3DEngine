@@ -66,27 +66,28 @@ public class test {
             }
         }
 
-        for(Vec3i[] z: tmp) {
-            cubes.addCube(z);
-
-            System.out.println("aye");
-        }
-        for(Vec3i[] z: tmp1) {
-            cubes.addCube(z);
-
-            System.out.println("aye1");
-        }
+//        for(Vec3i[] z: tmp) {
+//            cubes.addCube(z);
+//
+//            System.out.println("aye");
+//        }
+//        for(Vec3i[] z: tmp1) {
+//            cubes.addCube(z);
+//
+//            System.out.println("aye1");
+//        }
 
 //        cubes.addCube(new Vec3i(1,1,1),new Vec3i(2,1,1), new Vec3i(1,1,0), new Vec3i(1,1,2));
 //        cubes.addCube(new Vec3i(1,2,1),new Vec3i(2,2,1), new Vec3i(1,2,0), new Vec3i(1,2,2));
-
+        cubes.addCube(new Vec3i());
 //        cubes.addCube(new Vec3i(0,0,-2),new Vec3i(1,0,-2),new Vec3i(0,1,-2),new Vec3i(0,0,-1),new Vec3i(0,0,-3),
 //                new Vec3i(-1,0,-2), new Vec3i(0,-1,-2));
         glEnable(GL_DEPTH_TEST);
         GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glfwSwapInterval(0);
-        cubes.func();
+
         int a = 0;
+        cubes.func();
         while (!glfwWindowShouldClose(window)) {
             float curFrame = (float) glfwGetTime();
 
@@ -99,6 +100,7 @@ public class test {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //            System.out.println(glGetError());
+            cubes.move(new Vec3i());
             cubes.draw();
 
 //            if (a == 2){
@@ -122,7 +124,6 @@ public class test {
     void key_callback(Camera camera) {
 
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-
             if (action == GLFW_PRESS) {
                 keys[key] = true;
             }
@@ -134,13 +135,6 @@ public class test {
             }
             }
         );
-    }
-
-    void error_catching(){
-        glDebugMessageCallback((source, type, id, severity, length, message, userParam)->{
-            String text = String.format("\"GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\\n\"", ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),type,severity, message);
-            System.out.println(text);
-        },0);
     }
 
 

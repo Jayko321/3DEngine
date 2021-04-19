@@ -92,7 +92,6 @@ public class CubeBatch extends Cube{
 
 
     void genMeshes(){
-
         for (Map.Entry<Vec3i, Cube> HashedCubes : Cubes.entrySet()) {
             Cube Cube = HashedCubes.getValue();
             if (Cube == null){
