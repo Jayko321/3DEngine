@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45.glCreateBuffers;
 
-public class CubeMesh {
+public class CubeBatch {
 
 
 
@@ -111,7 +111,7 @@ public class CubeMesh {
     private ArrayList<Cube> Cubes = new ArrayList<>(128);
 
 
-    public CubeMesh(String texturePath, Shader shader){
+    public CubeBatch(String texturePath, Shader shader){
         GL.createCapabilities();
 
 
