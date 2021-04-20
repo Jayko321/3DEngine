@@ -1,4 +1,5 @@
 import glm_.mat4x4.Mat4;
+import glm_.quat.Quat;
 import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
@@ -7,6 +8,7 @@ import org.lwjgl.opengl.GL46;
 
 import java.io.IOException;
 
+import static glm_.glm.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -66,16 +68,16 @@ public class test {
             }
         }
 
-//        for(Vec3i[] z: tmp) {
-//            cubes.addCube(z);
-//
-//            System.out.println("aye");
-//        }
-//        for(Vec3i[] z: tmp1) {
-//            cubes.addCube(z);
-//
-//            System.out.println("aye1");
-//        }
+        for(Vec3i[] z: tmp) {
+            cubes.addCube(z);
+
+            System.out.println("aye");
+        }
+        for(Vec3i[] z: tmp1) {
+            cubes.addCube(z);
+
+            System.out.println("aye1");
+        }
 
 //        cubes.addCube(new Vec3i(1,1,1),new Vec3i(2,1,1), new Vec3i(1,1,0), new Vec3i(1,1,2));
 //        cubes.addCube(new Vec3i(1,2,1),new Vec3i(2,2,1), new Vec3i(1,2,0), new Vec3i(1,2,2));
@@ -107,6 +109,7 @@ public class test {
 //            if(a > 10000){
 //                a = 0;
 //                cubes.moveCube(cubes.getCubeByPos(c_ptr.getPosition()), new Vec3i(1,1,1));
+//
 //            }
 
             cubes.draw();
@@ -130,7 +133,6 @@ public class test {
     }
 
     void key_callback(Camera camera) {
-
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
                 keys[key] = true;
@@ -171,6 +173,7 @@ public class test {
     public void cleanup() {
         glDeleteVertexArrays(VAO);
         glDeleteBuffers(VBO);
+        glDeleteBuffers(IBO);
         glfwDestroyWindow(window);
         glfwMakeContextCurrent(NULL);
         glfwTerminate();

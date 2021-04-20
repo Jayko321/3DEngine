@@ -1,6 +1,10 @@
 // TODO: 09.03.2021 Funcs: draw, move, setTexture,
 
+import glm_.mat4x4.Mat4;
+import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
+import glm_.vec4.Vec4;
+import glm_.vec4.Vec4i;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
@@ -8,6 +12,7 @@ import org.lwjgl.stb.STBImage;
 import java.nio.ByteBuffer;
 import java.util.*;
 
+import static glm_.glm.*;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -79,6 +84,16 @@ public class CubeBatch extends Cube{
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
     }
 
+
+//
+//    void rotateCube(Cube Cube, float angle, Vec3 Axis){
+//        if(Cubes.containsValue(Cube)){
+//            Mat4 a = new Mat4();
+//            a = INSTANCE.rotate(a, INSTANCE.radians(angle), Axis);
+//            Vec4 b = a.times(new Vec4(Cube.getPositionAsVec3(), 1));
+//            Cube.move(new Vec3i((int)(b.getX() + 0), (int)(b.getY() + 0),(int)(b.getZ() + 0)));
+//        }
+//    }
 
     Cube getCubeByPos(Vec3i Pos){
         return Cubes.get(Pos);

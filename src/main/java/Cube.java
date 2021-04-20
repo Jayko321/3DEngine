@@ -1,7 +1,10 @@
+import glm_.mat3x4.Mat3x4;
 import glm_.mat4x3.Mat4x3;
 import glm_.mat4x4.Mat4;
 import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
+import org.apache.commons.lang3.ArrayUtils;
+
 import static glm_.glm.*;
 
 import java.util.*;
@@ -35,6 +38,8 @@ class Cube {
         int X = position.getX();
         int Y = -position.getY();
         int Z = position.getZ();
+
+
         this.vertices.put(edges.BACK, new Float[]{//back
                 0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
                 size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
@@ -74,7 +79,6 @@ class Cube {
     }
 
 
-
     public void hideEdge(edges edge){
         int size = this.vertices.size();
         switch (edge){
@@ -109,6 +113,10 @@ class Cube {
                 }
             }
         }
+    }
+
+    public Vec3 getPositionAsVec3(){
+        return new Vec3(position.getX(),position.getY(),position.getZ());
     }
 
     public Vec3i getPosition() {
