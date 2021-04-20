@@ -41,9 +41,6 @@ public class CubeBatch extends Cube{
 
     void addCube(Vec3i Pos){
         Cubes.put(Pos ,new Cube(Pos));
-//        Cubes.get(Pos).hideEdge(Cube.edges.BACK);
-        genMeshes();
-        prepareShape();
     }
 
     void addCube(Vec3i... Pos){
@@ -58,6 +55,35 @@ public class CubeBatch extends Cube{
         genMeshes();
         prepareShape();
     }
+
+
+    void moveCube(Cube Cube,Vec3i pos){
+        if(Cubes.containsValue(Cube)){
+            replaceDataInVertexArray(ArrayUtils.toPrimitive(Cube.getVertices().toArray(new Float[0])));
+            Cubes.remove(Cube.getPosition());
+            Cube.move(pos);
+
+            Cubes.putIfAbsent(Cube.getPosition(), Cube);
+        }
+        else {
+            System.out.println("Cube not found");
+        }
+
+    }
+
+
+
+
+    void replaceDataInVertexArray(float[] vertices){
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+    }
+
+
+    Cube getCubeByPos(Vec3i Pos){
+        return Cubes.get(Pos);
+    }
+
 
     void HideNotNeededEdges(){
         for (Map.Entry<Vec3i, Cube> HashedCubes : Cubes.entrySet()) {
@@ -132,7 +158,7 @@ public class CubeBatch extends Cube{
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesBatch.toArray(new Float[0])), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, ArrayUtils.toPrimitive(verticesBatch.toArray(new Float[0])), GL_DYNAMIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArrayUtils.toPrimitive(indicesBatch.toArray(new Integer[0])), GL_STATIC_DRAW);

@@ -69,8 +69,7 @@ class Cube {
     }
 
     void move(Vec3i pos){
-        Vec3 value = new Vec3();
-        value.plus(pos.getX(), pos.getY(),pos.getZ());
+        this.position.plus(pos.getX(), pos.getY(),pos.getZ(), this.position);
         genVertices();
     }
 

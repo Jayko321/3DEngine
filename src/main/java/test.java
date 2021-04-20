@@ -82,17 +82,21 @@ public class test {
         cubes.addCube(new Vec3i());
 //        cubes.addCube(new Vec3i(0,0,-2),new Vec3i(1,0,-2),new Vec3i(0,1,-2),new Vec3i(0,0,-1),new Vec3i(0,0,-3),
 //                new Vec3i(-1,0,-2), new Vec3i(0,-1,-2));
+
         glEnable(GL_DEPTH_TEST);
         GL46.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glfwSwapInterval(0);
 
         int a = 0;
         cubes.func();
+        Cube c_ptr = cubes.getCubeByPos(new Vec3i());
+        int deltaSum = 0;
         while (!glfwWindowShouldClose(window)) {
             float curFrame = (float) glfwGetTime();
 
             deltaTime = curFrame - lastFrame;
             lastFrame = curFrame;
+            deltaSum += deltaTime;
             System.out.println(1 / deltaTime);
             glfwPollEvents();
 
@@ -100,7 +104,11 @@ public class test {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //            System.out.println(glGetError());
-            cubes.move(new Vec3i());
+//            if(a > 10000){
+//                a = 0;
+//                cubes.moveCube(cubes.getCubeByPos(c_ptr.getPosition()), new Vec3i(1,1,1));
+//            }
+
             cubes.draw();
 
 //            if (a == 2){
