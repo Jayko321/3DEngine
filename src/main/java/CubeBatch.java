@@ -29,7 +29,7 @@ public class CubeBatch extends Cube{
     private final Map<Vec3i,Cube> Cubes = new HashMap<>();
 
 
-    public CubeBatch(String texturePath, Shader shader){
+    public CubeBatch(String texturePath){
         super();
         GL.createCapabilities();
         setTexture(texturePath);
@@ -73,7 +73,6 @@ public class CubeBatch extends Cube{
         else {
             System.out.println("Cube not found");
         }
-
     }
 
 
@@ -190,12 +189,10 @@ public class CubeBatch extends Cube{
     }
 
     public void draw(){
-
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indicesBatch.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-
     }
 
 }

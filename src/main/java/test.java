@@ -1,6 +1,12 @@
+/* TODO:
+*   1.Chunk.class
+*   CubePos.class
+*   Abstraction from opengl
+*   Add cubes abstraction means i can add cube and dont worry about its rendering
+*   */
+
+
 import glm_.mat4x4.Mat4;
-import glm_.quat.Quat;
-import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
@@ -8,7 +14,6 @@ import org.lwjgl.opengl.GL46;
 
 import java.io.IOException;
 
-import static glm_.glm.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -52,8 +57,8 @@ public class test {
         key_callback(camera);
         mouse_callback();
 
-        CubeBatch cubes = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
-        CubeBatch cube1 = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg", shader);
+        CubeBatch cubes = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg");
+        CubeBatch cube1 = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg");
 
         glViewport(0, 0, w, h);
 

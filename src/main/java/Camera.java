@@ -25,9 +25,13 @@ public class Camera {
     private Vec3 cameraRight = up.cross(cameraDirection);
     private Vec3 cameraUp = cameraDirection.cross(cameraRight);
     private static Shader shader;
+    private final int viewLoc;
+    private final  int projLoc;
     Camera(long window, Shader sh, int width, int height){
         shader = sh;
         proj = INSTANCE.perspective(glm.INSTANCE.radians(-90f), (float) width/(float) height,0.1f, 100f);
+        viewLoc = glGetUniformLocation(shader.Program, "view");
+        projLoc = glGetUniformLocation(shader.Program, "projection");
     }
 
 
@@ -74,10 +78,7 @@ public class Camera {
                                     up);
 
 
-        int viewLoc = glGetUniformLocation(shader.Program, "view");
         glUniformMatrix4fv(viewLoc, false, view.getArray());
-
-        int projLoc = glGetUniformLocation(shader.Program, "projection");
         glUniformMatrix4fv(projLoc, false, proj.getArray());
     }
 
