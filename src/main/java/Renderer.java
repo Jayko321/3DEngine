@@ -1,10 +1,6 @@
 import glm_.vec3.Vec3i;
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.stb.STBImage;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +18,7 @@ public class Renderer {
     private List<String> texturePaths;
     private final int VBO,IBO,VAO;
     private HashMap<Vec3i, Chunk> Chunks;
+    private boolean ChunksChanged = false;
     int texture;
 
     public Renderer() {
@@ -36,16 +33,17 @@ public class Renderer {
         for (Chunk ch : chunks) {
             Chunks.put(ch.getChunkPos(), ch);
         }
+        ChunksChanged = true;
     }
 
-    private void prepareRendering(Float[] vertices) {
+    private void prepareRendering(float[] vertices) {
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, ArrayUtils.toPrimitive(vertices), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.genIndices(Arrays.asList(vertices)), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.genIndices(vertices), GL_STATIC_DRAW);
 
 
 
@@ -55,14 +53,26 @@ public class Renderer {
         glVertexAttribPointer(2, 2, GL_FLOAT, false, 5 * SIZEOF_FLOAT, 12);
         glEnableVertexAttribArray(2);
         glBindVertexArray(0);
-
     }
+
+
+    private void replaceDataInVertexArray(float[] vertices){
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+    }
+
 
     public void draw(){
         for(Map.Entry<Vec3i, Chunk> chunk: Chunks.entrySet()){
+            Chunk Chunk = chunk.getValue();
+            float[] vert = Chunk.getVertices();
+            if(ChunksChanged){
+                ChunksChanged = false;
+                replaceDataInVertexArray(vert);
+            }
             //draw every chunk
-            draw(32);
-            draw(12);
+            draw(Chunk.getIndicesSize());
+
         }
     }
 
