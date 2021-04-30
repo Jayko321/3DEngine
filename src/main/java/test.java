@@ -7,6 +7,7 @@
 
 
 import glm_.mat4x4.Mat4;
+import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
@@ -56,9 +57,17 @@ public class test {
 //        error_catching();
         key_callback(camera);
         mouse_callback();
+//
+//        CubeBatch cubes = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg");
+//        CubeBatch cube1 = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg");
 
-        CubeBatch cubes = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg");
-        CubeBatch cube1 = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg");
+
+        Renderer renderer = new Renderer();
+        Chunk c1 = new Chunk(new Vec3i(0,0,0));
+        Chunk c2 = new Chunk(new Vec3i(16,16,16));
+        c1.addCube(new Vec3i(0,0,0));
+        c2.addCube(new Vec3i(0,0,0));
+        renderer.addChunks(c1,c2);
 
         glViewport(0, 0, w, h);
 
@@ -73,20 +82,20 @@ public class test {
             }
         }
 
-        for(Vec3i[] z: tmp) {
-            cubes.addCube(z);
-
-            System.out.println("aye");
-        }
-        for(Vec3i[] z: tmp1) {
-            cubes.addCube(z);
-
-            System.out.println("aye1");
-        }
+//        for(Vec3i[] z: tmp) {
+//            cubes.addCube(z);
+//
+//            System.out.println("aye");
+//        }
+//        for(Vec3i[] z: tmp1) {
+//            cubes.addCube(z);
+//
+//            System.out.println("aye1");
+//        }
 
 //        cubes.addCube(new Vec3i(1,1,1),new Vec3i(2,1,1), new Vec3i(1,1,0), new Vec3i(1,1,2));
 //        cubes.addCube(new Vec3i(1,2,1),new Vec3i(2,2,1), new Vec3i(1,2,0), new Vec3i(1,2,2));
-        cubes.addCube(new Vec3i());
+//        cubes.addCube(new Vec3i());
 //        cubes.addCube(new Vec3i(0,0,-2),new Vec3i(1,0,-2),new Vec3i(0,1,-2),new Vec3i(0,0,-1),new Vec3i(0,0,-3),
 //                new Vec3i(-1,0,-2), new Vec3i(0,-1,-2));
 
@@ -95,8 +104,8 @@ public class test {
         glfwSwapInterval(0);
 
         int a = 0;
-        cubes.func();
-        Cube c_ptr = cubes.getCubeByPos(new Vec3i());
+//        cubes.func();
+//        Cube c_ptr = cubes.getCubeByPos(new Vec3i());
         int deltaSum = 0;
         while (!glfwWindowShouldClose(window)) {
             float curFrame = (float) glfwGetTime();
@@ -110,6 +119,7 @@ public class test {
             //начало отрисовки
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
 //            System.out.println(glGetError());
 //            if(a > 10000){
 //                a = 0;
@@ -117,7 +127,7 @@ public class test {
 //
 //            }
 
-            cubes.draw();
+//            cubes.draw();
 
 //            if (a == 2){
 //                System.exit(0);
@@ -127,10 +137,11 @@ public class test {
             camera.Use();
             camera.do_movement(keys, deltaTime);
             camera.mouse_movement(pitch, yaw);
-            Mat4 value = new Mat4();
+            renderer.draw();
+//            Mat4 value = new Mat4();
 
-            int location = glGetUniformLocation(shader.Program, "transform");
-            glUniformMatrix4fv(location, false, value.getArray());
+//            int location = glGetUniformLocation(shader.Program, "transform");
+//            glUniformMatrix4fv(location, false, value.getArray());
 
             glfwSwapBuffers(window);
         }
@@ -187,5 +198,6 @@ public class test {
 
     public static void main(String[] args) throws IOException {
         new test().start();
+
     }
 }

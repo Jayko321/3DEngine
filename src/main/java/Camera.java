@@ -19,19 +19,17 @@ public class Camera {
     public Vec3 cameraPos = new Vec3(0, 0 ,0);
 //    private Vec3 cameraTarget = new Vec3(0f, 0, 0);
     private Vec3 cameraFront = new Vec3(0,0,-1);
-    private Vec3 cameraTarget = new Vec3(0,0,0);
-    private Vec3 cameraDirection = cameraPos.minus(cameraTarget);
-    private Vec3 up = new Vec3(0, 1, 0);
-    private Vec3 cameraRight = up.cross(cameraDirection);
-    private Vec3 cameraUp = cameraDirection.cross(cameraRight);
-    private static Shader shader;
+    private final Vec3 cameraTarget = new Vec3(0,0,0);
+    private final Vec3 cameraDirection = cameraPos.minus(cameraTarget);
+    private final Vec3 up = new Vec3(0, 1, 0);
+    private final Vec3 cameraRight = up.cross(cameraDirection);
+    private final Vec3 cameraUp = cameraDirection.cross(cameraRight);
     private final int viewLoc;
     private final  int projLoc;
     Camera(long window, Shader sh, int width, int height){
-        shader = sh;
         proj = INSTANCE.perspective(glm.INSTANCE.radians(-90f), (float) width/(float) height,0.1f, 100f);
-        viewLoc = glGetUniformLocation(shader.Program, "view");
-        projLoc = glGetUniformLocation(shader.Program, "projection");
+        viewLoc = glGetUniformLocation(sh.Program, "view");
+        projLoc = glGetUniformLocation(sh.Program, "projection");
     }
 
 

@@ -4,13 +4,17 @@ Cube.java
  Cube
  Cube$1
  Cube$edges
-mathtest.java
- mathtest
+test.java
+ test
 Camera.java
  Camera
 Shader.java
  Shader
+Util.java
+ Util
 Chunk.java
  Chunk
-test.java
- test
+Renderer.java
+ Renderer
+mathtest.java
+ mathtest
