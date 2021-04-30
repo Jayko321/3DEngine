@@ -69,24 +69,36 @@ public class test {
         c2.addCube(new Vec3i(0,0,0));
         renderer.addChunks(c1,c2);
 
+//        for (int i = 0; i < 1024;i++){
+//            Chunk chunk = new Chunk(new Vec3i(i*16,i*16,i*16));
+//            chunk.addCube(new Vec3i(0,0,0));
+//            renderer.addChunks(chunk);
+//        }
+
+
         glViewport(0, 0, w, h);
 
-        Vec3i[][] tmp = new Vec3i[16][16];
-        Vec3i[][] tmp1 = new Vec3i[16][16];
+        Vec3i[][] tmp = new Vec3i[64][64];
+        Vec3i[][] tmp1 = new Vec3i[64][64];
 
-        for (int z = 0; z < 16; z++) {
-            for (int x = 0; x < 16; x++) {
-
+        for (int z = 0; z < 64; z++) {
+            for (int x = 0; x < 64; x++) {
                 tmp[z][x] = new Vec3i(x,0,z);
                 tmp1[z][x] = new Vec3i(x,1,z);
             }
         }
 
-//        for(Vec3i[] z: tmp) {
-//            cubes.addCube(z);
-//
-//            System.out.println("aye");
-//        }
+        for(Vec3i[] z: tmp) {
+            for(Vec3i Z : z){
+                Chunk chunk = new Chunk(Z);
+                chunk.addCube(new Vec3i(0,0,0));
+//                chunk.addCube(new Vec3i(1,0,0));
+//                chunk.addCube(new Vec3i(2,0,0));
+//                chunk.addCube(new Vec3i(3,0,0));
+                renderer.addChunks(chunk);
+            }
+            System.out.println("aye");
+        }
 //        for(Vec3i[] z: tmp1) {
 //            cubes.addCube(z);
 //
@@ -113,7 +125,7 @@ public class test {
             deltaTime = curFrame - lastFrame;
             lastFrame = curFrame;
             deltaSum += deltaTime;
-            System.out.println(1 / deltaTime);
+            System.out.println("Fps is " + (1 / deltaTime) + "\nFrame Time is " + (deltaTime*1000));
             glfwPollEvents();
 
             //начало отрисовки

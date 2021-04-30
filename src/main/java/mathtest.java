@@ -8,15 +8,15 @@ public class mathtest {
     }
 
     void test(){
-        float a =  (63 | 255 << 6 | 63 << 14 | 1 << 21);
+        float a =  (15 | 255 << 4 | 15 << 12 | 1 << 19);
 
 
 
 
-        System.out.println("X = " + ((int)a & 0x3F) + "\n" +
-                           "Y = " + (((int)a & 0x3FC0) >> 6) + "\n" +
-                           "Z = " + ((((int)a & 0xFC000) >> 14 )) + "\n" +
-                           "texCoord1 = " + (((int)a & 0x300000) >> 21)
+        System.out.println("X = " + ((int)a & 0xF) + "\n" +
+                           "Y = " + (((int)a & 0xFF0) >> 4) + "\n" +
+                           "Z = " + (((int)a & 0xF000) >> 12 ) + "\n" +
+                           "texCoord1 = " + (((int)a & 0xC0000) >> 19)
                             );
         System.out.println(Integer.toBinaryString((int)a));
     }

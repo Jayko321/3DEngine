@@ -10,7 +10,6 @@ import static glm_.glm.*;
 import java.util.*;
 
 class Cube {
-    float size = 1f;
 
     private final Vec3i position;
     HashMap<edges, Float[]> vertices = new HashMap<>();
@@ -38,8 +37,7 @@ class Cube {
         int X = position.getX();
         int Y = -position.getY();
         int Z = position.getZ();
-
-
+        float size = 1f;
         this.vertices.put(edges.BACK, new Float[]{//back
                 0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
                 size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,

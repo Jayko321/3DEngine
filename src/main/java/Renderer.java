@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL46.*;
 
 public class Renderer {
     private List<String> texturePaths;
@@ -31,7 +32,7 @@ public class Renderer {
     public void addChunks(Chunk... chunks) {
         for (Chunk ch : chunks) {
             Chunks.putIfAbsent(ch.getChunkPos(), ch);
-            prepareRendering(ch.getVertices());
+            prepareRendering(ch.getVertices(), ch.getIndices());
             System.out.println(ch.getCube(new Vec3i(0,0,0)).getVertices());
         }
 
@@ -40,16 +41,21 @@ public class Renderer {
 
 
     private void preAllocMem(){
+
+
+    }
+
+    private void prepareRendering(float[] vertices, int[] indices) {
         glBindVertexArray(VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, new int[0], GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
+//        replaceDataInVertexBuffer(vertices);
+
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, new int[0], GL_STATIC_DRAW);
-    }
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-    private void prepareRendering(float[] vertices) {
         preAllocMem();
 
 
@@ -95,7 +101,7 @@ public class Renderer {
         for(Map.Entry<Vec3i, Chunk> chunk: Chunks.entrySet()){
             Chunk Chunk = chunk.getValue();
             //draw every chunk
-            prepareRendering(Chunk.getVertices());
+            prepareRendering(Chunk.getVertices(), Chunk.getIndices());
             draw(Chunk.getIndicesSize());
         }
     }
