@@ -16,7 +16,7 @@ public class Camera {
 
     public float X = 0f, Y = 0f, Z = -3f;
     private static Mat4 proj;
-    public Vec3 cameraPos = new Vec3(0, 0 ,0);
+    public Vec3 cameraPos = new Vec3(32*16, 0 ,32*16);
 //    private Vec3 cameraTarget = new Vec3(0f, 0, 0);
     private Vec3 cameraFront = new Vec3(0,0,-1);
     private final Vec3 cameraTarget = new Vec3(0,0,0);

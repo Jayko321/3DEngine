@@ -72,7 +72,7 @@ class Cube {
     }
 
     void move(Vec3i pos){
-        this.position.plus(pos.getX(), pos.getY(),pos.getZ(), this.position);
+        this.position.plusAssign(pos);
         genVertices();
     }
 
@@ -122,7 +122,7 @@ class Cube {
     }
 
     public ArrayList<Float> getVertices(){
-        ArrayList<Float> v = new ArrayList<Float>();
+        ArrayList<Float> v = new ArrayList<>();
         for(Map.Entry<edges, Float[]> i : vertices.entrySet()){
             v.addAll(Arrays.asList(i.getValue()));
         }

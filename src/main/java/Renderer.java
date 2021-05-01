@@ -50,13 +50,9 @@ public class Renderer {
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
-//        replaceDataInVertexBuffer(vertices);
-
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
-
-        preAllocMem();
 
 
         int SIZEOF_FLOAT = 4;

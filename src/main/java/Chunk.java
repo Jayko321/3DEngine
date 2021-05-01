@@ -18,6 +18,12 @@ public class Chunk {
         if(ChunkPos.getZ() % 16 != 0){System.err.println("Wrong chunk position");}
         this.ChunkPos = ChunkPos;
     }
+    public Chunk(int x,int y, int z) {
+        if(x % 16 != 0){System.err.println("Wrong chunk position");}
+        if(y % 16 != 0){System.err.println("Wrong chunk position");}
+        if(z % 16 != 0){System.err.println("Wrong chunk position");}
+        this.ChunkPos = new Vec3i(x,y,z);
+    }
 
     public Vec3i getChunkPos() {
         return ChunkPos;
@@ -33,7 +39,7 @@ public class Chunk {
         if (pos.getZ() >= 16) {return;}
         Cubes.putIfAbsent(pos, new Cube(new Vec3i(
                 pos.getX() + (ChunkPos.getX()),
-                pos.getY() + 0,
+                (int)pos.getY(),
                 pos.getZ() + (ChunkPos.getZ())
         )));
     }
