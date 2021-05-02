@@ -11,9 +11,11 @@ import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.NVXGPUMemoryInfo;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
@@ -67,6 +69,7 @@ public class test {
         Chunk c2 = new Chunk(new Vec3i(16,16,16));
         c1.addCube(new Vec3i(0,0,0));
         c2.addCube(new Vec3i(0,0,0));
+        c2.addCube(new Vec3i(2,0,4));
         renderer.addChunks(c1,c2);
 
 //        for (int i = 0; i < 1024;i++){
@@ -87,29 +90,29 @@ public class test {
             }
         }
 
-        for(Vec3i[] z: tmp) {
-            for(Vec3i Z : z){
-                Chunk chunk = new Chunk(Z.getX()*16,0,Z.getZ()*16);
-                chunk.addCube(new Vec3i(0,0,0));
-                chunk.addCube(new Vec3i(1,0,1));
-                chunk.addCube(new Vec3i(2,0,2));
-                chunk.addCube(new Vec3i(3,0,3));
-                chunk.addCube(new Vec3i(4,0,4));
-                chunk.addCube(new Vec3i(5,0,5));
-                chunk.addCube(new Vec3i(6,0,6));
-                chunk.addCube(new Vec3i(7,0,7));
-                chunk.addCube(new Vec3i(8,0,8));
-                chunk.addCube(new Vec3i(9,0,9));
-                chunk.addCube(new Vec3i(10,0,10));
-                chunk.addCube(new Vec3i(11,0,11));
-                chunk.addCube(new Vec3i(12,0,12));
-                chunk.addCube(new Vec3i(13,0,13));
-                chunk.addCube(new Vec3i(14,0,14));
-                chunk.addCube(new Vec3i(15,0,15));
-                renderer.addChunks(chunk);
-            }
-            System.out.println("aye");
-        }
+//        for(Vec3i[] z: tmp) {
+//            for(Vec3i Z : z){
+//                Chunk chunk = new Chunk(Z.getX()*16,0,Z.getZ()*16);
+//                chunk.addCube(new Vec3i(0,0,0));
+//                chunk.addCube(new Vec3i(1,0,1));
+//                chunk.addCube(new Vec3i(2,0,2));
+//                chunk.addCube(new Vec3i(3,0,3));
+//                chunk.addCube(new Vec3i(4,0,4));
+//                chunk.addCube(new Vec3i(5,0,5));
+//                chunk.addCube(new Vec3i(6,0,6));
+//                chunk.addCube(new Vec3i(7,0,7));
+//                chunk.addCube(new Vec3i(8,0,8));
+//                chunk.addCube(new Vec3i(9,0,9));
+//                chunk.addCube(new Vec3i(10,0,10));
+//                chunk.addCube(new Vec3i(11,0,11));
+//                chunk.addCube(new Vec3i(12,0,12));
+//                chunk.addCube(new Vec3i(13,0,13));
+//                chunk.addCube(new Vec3i(14,0,14));
+//                chunk.addCube(new Vec3i(15,0,15));
+//                renderer.addChunks(chunk);
+//            }
+//            System.out.println("aye");
+//        }
 //        for(Vec3i[] z: tmp1) {
 //            cubes.addCube(z);
 //

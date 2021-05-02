@@ -1,11 +1,11 @@
 test.java
  test
-Camera.java
- Camera
 Shader.java
  Shader
 mathtest.java
  mathtest
+Camera.java
+ Camera
 CubeBatch.java
  CubeBatch
 Cube.java

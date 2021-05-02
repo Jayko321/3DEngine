@@ -1,13 +1,10 @@
-import glm_.mat3x4.Mat3x4;
-import glm_.mat4x3.Mat4x3;
-import glm_.mat4x4.Mat4;
 import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
-import org.apache.commons.lang3.ArrayUtils;
 
-import static glm_.glm.*;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 class Cube {
 
@@ -38,11 +35,36 @@ class Cube {
         int Y = -position.getY();
         int Z = position.getZ();
         float size = 1f;
+        int a1;
+        float a2;
+        float a3;
+        float a4;
+        int iSize = (int)size;
+
+        a1 = X | Y << 8| Z << 16 | 1 << 24 | 0 << 25;
+        a2 = (iSize + X & 0xff) | (Y & 0xFF00) << 8| (Z & 0xFF0000) << 16 | (1 & 0x1000000) << 24;
+        a3 = (iSize + X & 0xff) | (iSize + Y & 0xFF00) << 8| (Z & 0xFF0000) << 16 | (1 & 0x1000000) << 24 | (1 & 0x20000) << 25;
+        a4 = (X & 0xff) | (iSize + Y & 0xFF00) << 8| (Z & 0xFF0000) << 16 | (1 & 0x20000) << 25;
+        HashMap<String, Integer[]> a = new HashMap<>();
         this.vertices.put(edges.BACK, new Float[]{//back
                 0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
                 size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
                 size + X, size + Y, 0.0f + Z, 1.0f, 1.0f,
                 0.0f + X, size + Y, 0.0f + Z, 0.0f, 1.0f});
+        System.out.println(Integer.toBinaryString((int)a1));
+        System.out.println("X = " + (a1 & 0xFF) + "\n" +
+                "Y = " + ((a1 & 0xFF00) >> 8) + "\n" +
+                "Z = " + ((a1 & 0xFF0000) >> 16 ) + "\n" +
+                "texCoord1 = " + ((a1 & 0x1000000) >> 24) +
+                "\ntexCoord2 = " + ((a1 & 0x2000000) >> 25)
+        );
+        System.out.println(Arrays.toString(new int[]{X, Y, Z}));
+
+
+
+
+
+
         this.vertices.put(edges.FRONT, new Float[]{//front
                 0.0f + X, 0.0f + Y, size + Z, 0.0f, 0.0f,
                 size + X, 0.0f + Y, size + Z, 1.0f, 0.0f,
