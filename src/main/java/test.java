@@ -1,36 +1,26 @@
-/* TODO:
-*   1.Chunk.class
-*   CubePos.class
-*   Abstraction from opengl
-*   Add cubes abstraction means i can add cube and dont worry about its rendering
-*   */
 
-
-import glm_.mat4x4.Mat4;
+import Camera.*;
+import Objects.*;
+import Renderer.*;
 import glm_.vec2.Vec2i;
-import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
-import org.lwjgl.opengl.NVXGPUMemoryInfo;
 
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class test {
-    boolean firstMouse = true;
+public class main {
     float lastX = w/2f, lastY = h/2f;
     float yaw = -90f,pitch = 0f;
-    private boolean[] keys = new boolean[1024];
+    private final boolean[] keys = new boolean[1024];
     private float lastFrame = 0, deltaTime = 0;
     private static long window;
     public static final int w = 1920, h = 1080;
-    private static int VBO, VAO, IBO, texture;
 
     public void start() throws IOException {
         if (!glfwInit()) {
@@ -48,14 +38,12 @@ public class test {
             cleanup();
             throw new RuntimeException("sucks");
         }
-//        glfwFocusWindow(window);
-
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         Shader shader = new Shader("D:\\3DEngine\\src\\main\\java\\vertexShader.glsl",
-                "D:\\3DEngine\\src\\main\\java\\fragmentShader.glsl");
+                "D:\\3DEngine\\src\\main\\java\\Renderer\\Shaders\\fragmentShader.glsl");
         Camera camera = new Camera(window, shader, w, h);
 //        error_catching();
         key_callback(camera);
@@ -67,7 +55,7 @@ public class test {
 
         Renderer renderer = new Renderer(shader);
         Chunk c1 = new Chunk(new Vec2i(0,0));
-//        Chunk c2 = new Chunk(new Vec3i(16,16,16));
+//        Objects.Chunk c2 = new Objects.Chunk(new Vec3i(16,16,16));
         c1.addCube(new Vec3i(0,0,0));
         c1.addCube(new Vec3i(15,0,15));
         c1.addCube(new Vec3i(2,0,4));
@@ -79,7 +67,7 @@ public class test {
         renderer.addChunks(c32);
 
 //        for (int i = 0; i < 1024;i++){
-//            Chunk chunk = new Chunk(new Vec3i(i*16,i*16,i*16));
+//            Objects.Chunk chunk = new Objects.Chunk(new Vec3i(i*16,i*16,i*16));
 //            chunk.addCube(new Vec3i(0,0,0));
 //            renderer.addChunks(chunk);
 //        }
@@ -98,7 +86,7 @@ public class test {
 
 //        for(Vec3i[] z: tmp) {
 //            for(Vec3i Z : z){
-//                Chunk chunk = new Chunk(Z.getX()*16,Z.getZ()*16);
+//                Objects.Chunk chunk = new Objects.Chunk(Z.getX()*16,Z.getZ()*16);
 //                chunk.addCube(new Vec3i(0,0,0));
 //                chunk.addCube(new Vec3i(1,0,1));
 //                chunk.addCube(new Vec3i(2,0,2));
@@ -137,7 +125,7 @@ public class test {
 
         int a = 0;
 //        cubes.func();
-//        Cube c_ptr = cubes.getCubeByPos(new Vec3i());
+//        Objects.Cube c_ptr = cubes.getCubeByPos(new Vec3i());
         int deltaSum = 0;
         while (!glfwWindowShouldClose(window)) {
             float curFrame = (float) glfwGetTime();
@@ -211,7 +199,7 @@ public class test {
 
 
     public static void main(String[] args) throws IOException {
-        new test().start();
+        new main().start();
 
     }
 }
