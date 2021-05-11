@@ -137,7 +137,7 @@ public class CubeBatch extends Cube{
             if (Cube == null){
                 break;
             }
-            verticesBatch.addAll(Cube.getVertices());
+            verticesBatch.addAll(Cube.getVert());
         }
         indicesBatch.addAll(genIndices(verticesBatch));
     }

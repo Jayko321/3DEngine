@@ -1,3 +1,4 @@
+import glm_.vec2.Vec2i;
 import glm_.vec3.Vec3i;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -8,24 +9,22 @@ import java.util.Map;
 
 public class Chunk {
     private final HashMap<Vec3i, Cube> Cubes = new HashMap<>(16);
-    private final List<Float> vertices = new ArrayList<>(16*120);
+    private final List<Integer> vertices = new ArrayList<>(16*120);
     private int[] indices = new int[]{};
-    private final Vec3i ChunkPos;
+    private final Vec2i ChunkPos;
 
-    public Chunk(Vec3i ChunkPos) {
+    public Chunk(Vec2i ChunkPos) {
         if(ChunkPos.getX() % 16 != 0){System.err.println("Wrong chunk position");}
         if(ChunkPos.getY() % 16 != 0){System.err.println("Wrong chunk position");}
-        if(ChunkPos.getZ() % 16 != 0){System.err.println("Wrong chunk position");}
         this.ChunkPos = ChunkPos;
     }
-    public Chunk(int x,int y, int z) {
+    public Chunk(int x, int z) {
         if(x % 16 != 0){System.err.println("Wrong chunk position");}
-        if(y % 16 != 0){System.err.println("Wrong chunk position");}
         if(z % 16 != 0){System.err.println("Wrong chunk position");}
-        this.ChunkPos = new Vec3i(x,y,z);
+        this.ChunkPos = new Vec2i(x,z);
     }
 
-    public Vec3i getChunkPos() {
+    public Vec2i getChunkPos() {
         return ChunkPos;
     }
 
@@ -38,9 +37,9 @@ public class Chunk {
         if (pos.getY() >= 256){return;}
         if (pos.getZ() >= 16) {return;}
         Cubes.putIfAbsent(pos, new Cube(new Vec3i(
-                pos.getX() + (ChunkPos.getX()),
+                (int)pos.getX(),
                 (int)pos.getY(),
-                pos.getZ() + (ChunkPos.getZ())
+                (int)pos.getZ()
         )));
     }
 
@@ -50,7 +49,7 @@ public class Chunk {
 
             vertices.addAll(Cube.getVertices());
         }
-        indices = Util.genIndices(vertices);
+        indices = Util.genIndices(vertices.size());
     }
 
     public int[] getIndices() {
@@ -66,11 +65,11 @@ public class Chunk {
         return indices.length;
     }
 
-    public float[] getVertices() {
+    public int[] getVertices() {
         if(vertices.size() == 0){
             genData();
         }
-        return ArrayUtils.toPrimitive(vertices.toArray(new Float[0]));
+        return ArrayUtils.toPrimitive(vertices.toArray(new Integer[0]));
     }
 
     //draw func

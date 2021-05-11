@@ -10,6 +10,7 @@ class Cube {
 
     private final Vec3i position;
     HashMap<edges, Float[]> vertices = new HashMap<>();
+    HashMap<edges, Integer[]> vert = new HashMap<>();
 
     public Cube() {
         this.position = new Vec3i(0,0,0);
@@ -35,61 +36,88 @@ class Cube {
         int Y = -position.getY();
         int Z = position.getZ();
         float size = 1f;
-        int a1;
-        float a2;
-        float a3;
-        float a4;
-        int iSize = (int)size;
+        int iSize = (int) size;
 
-        a1 = X | Y << 8| Z << 16 | 1 << 24 | 0 << 25;
-        a2 = (iSize + X & 0xff) | (Y & 0xFF00) << 8| (Z & 0xFF0000) << 16 | (1 & 0x1000000) << 24;
-        a3 = (iSize + X & 0xff) | (iSize + Y & 0xFF00) << 8| (Z & 0xFF0000) << 16 | (1 & 0x1000000) << 24 | (1 & 0x20000) << 25;
-        a4 = (X & 0xff) | (iSize + Y & 0xFF00) << 8| (Z & 0xFF0000) << 16 | (1 & 0x20000) << 25;
-        HashMap<String, Integer[]> a = new HashMap<>();
-        this.vertices.put(edges.BACK, new Float[]{//back
-                0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
-                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, size + Y, 0.0f + Z, 1.0f, 1.0f,
-                0.0f + X, size + Y, 0.0f + Z, 0.0f, 1.0f});
-        System.out.println(Integer.toBinaryString((int)a1));
-        System.out.println("X = " + (a1 & 0xFF) + "\n" +
-                "Y = " + ((a1 & 0xFF00) >> 8) + "\n" +
-                "Z = " + ((a1 & 0xFF0000) >> 16 ) + "\n" +
-                "texCoord1 = " + ((a1 & 0x1000000) >> 24) +
-                "\ntexCoord2 = " + ((a1 & 0x2000000) >> 25)
-        );
-        System.out.println(Arrays.toString(new int[]{X, Y, Z}));
+        {
+            int a1;
+            int a2;
+            int a3;
+            int a4;
+            a1 = X | Y << 8 | Z << 16;
+            a2 = iSize + X | Y << 8 | Z << 16 | 1 << 24;
+            a3 = iSize + X | iSize + Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | iSize + Y << 8 | Z << 16 | 1 << 25;
+            this.vert.put(edges.BACK, new Integer[]{a1, a2, a3, a4});
+        }
 
+//        for(Integer a : this.vert.get(edges.BACK)){
+//            System.out.println("X = " + (a & 0xFF) + "\n" +
+//                    "Y = " + ((a & 0xFF00) >> 8) + "\n" +
+//                    "Z = " + ((a & 0xFF0000) >> 16 ) + "\n" +
+//                    "texCoord1 = " + ((a & 0x1000000) >> 24) +
+//                    "\ntexCoord2 = " + ((a & 0x2000000) >> 25)
+//            );
+//        }
 
+        {
+            int a1;
+            int a2;
+            int a3;
+            int a4;
+            a1 = X | Y << 8 | iSize + Z << 16;
+            a2 = iSize + X | Y << 8 | iSize + Z << 16 | 1 << 24;
+            a3 = iSize + X | iSize + Y << 8 | iSize + Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | iSize + Y << 8 | iSize + Z << 16 | 1 << 25;
+            this.vert.put(edges.FRONT, new Integer[]{a1, a2, a3, a4});
+        }
 
+        {
+            int a1;
+            int a2;
+            int a3;
+            int a4;
+            a1 = X | iSize + Y << 8 | iSize + Z << 16;
+            a2 = X | iSize + Y << 8 | Z << 16 | 1 << 24;
+            a3 = X | Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | Y << 8 | iSize + Z << 16 | 1 << 25;
+            this.vert.put(edges.RIGHT, new Integer[]{a1, a2, a3, a4});
+        }
 
+        {
+            int a1;
+            int a2;
+            int a3;
+            int a4;
+            a1 = iSize + X | iSize + Y << 8 | iSize + Z << 16;
+            a2 = iSize + X | iSize + Y << 8 | Z << 16 | 1 << 24;
+            a3 = iSize + X | Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
+            a4 = iSize + X | Y << 8 | iSize + Z << 16 | 1 << 25;
+            this.vert.put(edges.LEFT, new Integer[]{a1, a2, a3, a4});
+        }
 
+        {
+            int a1;
+            int a2;
+            int a3;
+            int a4;
+            a1 = X | Y << 8 | Z << 16;
+            a2 = iSize + X | Y << 8 | Z << 16 | 1 << 24;
+            a3 = iSize + X | Y << 8 | iSize + Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | Y << 8 | iSize + Z << 16 | 1 << 25;
+            this.vert.put(edges.TOP, new Integer[]{a1, a2, a3, a4});
+        }
 
-        this.vertices.put(edges.FRONT, new Float[]{//front
-                0.0f + X, 0.0f + Y, size + Z, 0.0f, 0.0f,
-                size + X, 0.0f + Y, size + Z, 1.0f, 0.0f,
-                size + X, size + Y, size + Z, 1.0f, 1.0f,
-                0.0f + X, size + Y, size + Z, 0.0f, 1.0f});
-        this.vertices.put(edges.RIGHT,new Float[]{//RIGHT
-                0.0f + X, size + Y, size + Z, 0.0f, 0.0f,
-                0.0f + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                0.0f + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
-                0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
-        this.vertices.put(edges.LEFT, new Float[]{//left
-                size + X, size + Y, size + Z, 0.0f, 0.0f,
-                size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
-                size + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
-        this.vertices.put(edges.TOP, new Float[]{//top
-                0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
-                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, 0.0f + Y, size + Z, 1.0f, 1.0f,
-                0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
-        this.vertices.put(edges.BOTTOM, new Float[]{//bottom
-                0.0f + X, size + Y, 0.0f + Z, 0.0f, 0.0f,
-                size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, size + Y, size + Z, 1.0f, 1.0f,
-                0.0f + X, size + Y, size + Z, 0.0f, 1.0f});
+        {
+            int a1;
+            int a2;
+            int a3;
+            int a4;
+            a1 = X | iSize + Y << 8 | Z << 16;
+            a2 = iSize + X | iSize + Y << 8 | Z << 16 | 1 << 24;
+            a3 = iSize + X | iSize + Y << 8 | iSize + Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | iSize + Y << 8 | iSize + Z << 16 | 1 << 25;
+            this.vert.put(edges.BOTTOM, new Integer[]{a1, a2, a3, a4});
+        }
 
     }
 
@@ -143,9 +171,17 @@ class Cube {
         return position;
     }
 
-    public ArrayList<Float> getVertices(){
+    public ArrayList<Float> getVert(){
         ArrayList<Float> v = new ArrayList<>();
         for(Map.Entry<edges, Float[]> i : vertices.entrySet()){
+            v.addAll(Arrays.asList(i.getValue()));
+        }
+        return v;
+    }
+
+    public ArrayList<Integer> getVertices(){
+        ArrayList<Integer> v = new ArrayList<>();
+        for(Map.Entry<edges, Integer[]> i : vert.entrySet()){
             v.addAll(Arrays.asList(i.getValue()));
         }
         return v;

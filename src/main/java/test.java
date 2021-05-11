@@ -7,6 +7,7 @@
 
 
 import glm_.mat4x4.Mat4;
+import glm_.vec2.Vec2i;
 import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
@@ -64,13 +65,18 @@ public class test {
 //        CubeBatch cube1 = new CubeBatch("D:\\3DEngine\\src\\main\\resources\\container.jpg");
 
 
-        Renderer renderer = new Renderer();
-        Chunk c1 = new Chunk(new Vec3i(0,0,0));
-        Chunk c2 = new Chunk(new Vec3i(16,16,16));
+        Renderer renderer = new Renderer(shader);
+        Chunk c1 = new Chunk(new Vec2i(0,0));
+//        Chunk c2 = new Chunk(new Vec3i(16,16,16));
         c1.addCube(new Vec3i(0,0,0));
-        c2.addCube(new Vec3i(0,0,0));
-        c2.addCube(new Vec3i(2,0,4));
-        renderer.addChunks(c1,c2);
+        c1.addCube(new Vec3i(15,0,15));
+        c1.addCube(new Vec3i(2,0,4));
+        Chunk c32 = new Chunk(16, 16);
+        c32.addCube(new Vec3i(0,0,0));
+        c32.addCube(new Vec3i(15,0,15));
+        c32.addCube(new Vec3i(2,0,4));
+        renderer.addChunks(c1);
+        renderer.addChunks(c32);
 
 //        for (int i = 0; i < 1024;i++){
 //            Chunk chunk = new Chunk(new Vec3i(i*16,i*16,i*16));
@@ -92,7 +98,7 @@ public class test {
 
 //        for(Vec3i[] z: tmp) {
 //            for(Vec3i Z : z){
-//                Chunk chunk = new Chunk(Z.getX()*16,0,Z.getZ()*16);
+//                Chunk chunk = new Chunk(Z.getX()*16,Z.getZ()*16);
 //                chunk.addCube(new Vec3i(0,0,0));
 //                chunk.addCube(new Vec3i(1,0,1));
 //                chunk.addCube(new Vec3i(2,0,2));
@@ -145,29 +151,11 @@ public class test {
             //начало отрисовки
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-//            System.out.println(glGetError());
-//            if(a > 10000){
-//                a = 0;
-//                cubes.moveCube(cubes.getCubeByPos(c_ptr.getPosition()), new Vec3i(1,1,1));
-//
-//            }
-
-//            cubes.draw();
-
-//            if (a == 2){
-//                System.exit(0);
-//            }
-            a++;
             shader.Use();
             camera.Use();
             camera.do_movement(keys, deltaTime);
             camera.mouse_movement(pitch, yaw);
             renderer.draw();
-//            Mat4 value = new Mat4();
-
-//            int location = glGetUniformLocation(shader.Program, "transform");
-//            glUniformMatrix4fv(location, false, value.getArray());
 
             glfwSwapBuffers(window);
         }

@@ -1,3 +1,4 @@
+import glm_.vec2.Vec2i;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
@@ -10,61 +11,58 @@ import java.util.Map;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL46.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Renderer {
     private List<String> texturePaths;
     private final int VBO,IBO,VAO;
-    private final HashMap<Vec3i, Chunk> Chunks = new HashMap<>();
+    private final HashMap<Vec2i, Chunk> Chunks = new HashMap<>();
     private int texture;
+    private final int chunkPosLoc;
 
-    public Renderer() {
+    public Renderer(Shader shader) {
         GL.createCapabilities();
         this.VAO = glGenVertexArrays();
         this.VBO = glGenBuffers();
         this.IBO = glGenBuffers();
-
+        this.chunkPosLoc = glGetUniformLocation(shader.Program, "chunkPos");
         setTexture();
     }
 
     public void addChunks(Chunk... chunks) {
-        for (Chunk ch : chunks) {
-            Chunks.putIfAbsent(ch.getChunkPos(), ch);
-            prepareRendering(ch.getVertices(), ch.getIndices());
-            System.out.println(ch.getCube(new Vec3i(0,0,0)).getVertices());
+        for (Chunk chunk : chunks) {
+            Chunks.putIfAbsent(chunk.getChunkPos(), chunk);
+//            prepareRendering(chunk.getVertices(), chunk.getIndices(), chunk.getChunkPos().getArray());
         }
 
     }
 
 
+    private void prepareRendering(int[] vertices, int[] indices, int[] chunkPos) {
 
-    private void preAllocMem(){
-
-
-    }
-
-    private void prepareRendering(float[] vertices, int[] indices) {
+        glUniform2iv(chunkPosLoc, chunkPos);
         glBindVertexArray(VAO);
+
+
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
+
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
 
         int SIZEOF_FLOAT = 4;
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * SIZEOF_FLOAT, 0);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, 5 * SIZEOF_FLOAT, 12);
-        glEnableVertexAttribArray(2);
+        glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, SIZEOF_FLOAT, NULL);
+
         glBindVertexArray(0);
     }
 
 
-    private void replaceDataInVertexBuffer(float[] vertices){
+    private void replaceDataInVertexBuffer(int[] vertices){
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
     }
@@ -85,7 +83,7 @@ public class Renderer {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    public void replaceChunk(Vec3i oldChunkPos, Chunk newChunk){
+    public void replaceChunk(Vec2i oldChunkPos, Chunk newChunk){
         if(Chunks.containsValue(newChunk)){return;}
         replaceDataInVertexBuffer(newChunk.getVertices());
         Chunks.remove(oldChunkPos);
@@ -94,10 +92,15 @@ public class Renderer {
 
 
     public void draw(){
-        for(Map.Entry<Vec3i, Chunk> chunk: Chunks.entrySet()){
+        for(Map.Entry<Vec2i, Chunk> chunk: Chunks.entrySet()){
+            int a = 0;
             Chunk Chunk = chunk.getValue();
             //draw every chunk
-            prepareRendering(Chunk.getVertices(), Chunk.getIndices());
+            for (int v : Chunk.getVertices()){
+                if(v >> 26 > 1){a++;}
+            }
+            if(a > 0){continue;}
+            prepareRendering(Chunk.getVertices(), Chunk.getIndices(), Chunk.getChunkPos().getArray());
             draw(Chunk.getIndicesSize());
         }
     }
