@@ -1,3 +1,5 @@
+package Util;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -6,19 +8,7 @@ import java.util.List;
 
 public class Util {
 
-
-
-
-
-
-
-    boolean shouldChunkBeRendered(Chunk Chunk){
-        return true;
-    }
-
-
-
-    static int[] genIndices(float[] vertices){
+    public static int[] genIndices(float[] vertices){
         ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 2, 3, 0));
         for (int i = 0; i+4 <= vertices.length/5; i+=4) {
             int last = indices.get(indices.size() - 1) + 4;
@@ -27,7 +17,7 @@ public class Util {
         return ArrayUtils.toPrimitive(indices.toArray(new Integer[0]));
     }
 
-    static int[] genIndices(List<Float> vertices) {
+    public static int[] genIndices(List<Float> vertices) {
         ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 2, 3, 0));
         for (int i = 0; i + 4 <= vertices.size() / 5; i += 4) {
             int last = indices.get(indices.size() - 1) + 4;
@@ -35,7 +25,7 @@ public class Util {
         }
         return ArrayUtils.toPrimitive(indices.toArray(new Integer[0]));
     }
-    static int[] genIndices(int verticesSize){
+    public static int[] genIndices(int verticesSize){
         ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 2, 3, 0));
         for (int i = 0; i+4 <= verticesSize; i+=4) {
             int last = indices.get(indices.size() - 1) + 4;

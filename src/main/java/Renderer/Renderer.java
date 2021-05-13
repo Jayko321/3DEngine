@@ -1,12 +1,13 @@
-import glm_.vec2.Vec2i;
+package Renderer;
+
+import Objects.ChunkBuffer;
+import Objects.Cube;
+import Objects.CubeDistributor;
 import glm_.vec3.Vec3i;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -15,29 +16,19 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Renderer {
-    private List<String> texturePaths;
-    private final int VBO,IBO,VAO;
-    private final HashMap<Vec2i, Chunk> Chunks = new HashMap<>();
+    private static int VBO,IBO,VAO;
     private int texture;
     private final int chunkPosLoc;
+    private final ChunkBuffer chunkBuffer = new ChunkBuffer();
 
     public Renderer(Shader shader) {
         GL.createCapabilities();
-        this.VAO = glGenVertexArrays();
-        this.VBO = glGenBuffers();
-        this.IBO = glGenBuffers();
+        VAO = glGenVertexArrays();
+        VBO = glGenBuffers();
+        IBO = glGenBuffers();
         this.chunkPosLoc = glGetUniformLocation(shader.Program, "chunkPos");
         setTexture();
     }
-
-    public void addChunks(Chunk... chunks) {
-        for (Chunk chunk : chunks) {
-            Chunks.putIfAbsent(chunk.getChunkPos(), chunk);
-//            prepareRendering(chunk.getVertices(), chunk.getIndices(), chunk.getChunkPos().getArray());
-        }
-
-    }
-
 
     private void prepareRendering(int[] vertices, int[] indices, int[] chunkPos) {
 
@@ -83,26 +74,23 @@ public class Renderer {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    public void replaceChunk(Vec2i oldChunkPos, Chunk newChunk){
-        if(Chunks.containsValue(newChunk)){return;}
-        replaceDataInVertexBuffer(newChunk.getVertices());
-        Chunks.remove(oldChunkPos);
-        Chunks.put(newChunk.getChunkPos(), newChunk);
+
+    public void drawCube(Vec3i pos, Texture texture){
+
     }
 
 
-    public void draw(){
-        for(Map.Entry<Vec2i, Chunk> chunk: Chunks.entrySet()){
-            int a = 0;
-            Chunk Chunk = chunk.getValue();
-            //draw every chunk
-            for (int v : Chunk.getVertices()){
-                if(v >> 26 > 1){a++;}
-            }
-            if(a > 0){continue;}
-            prepareRendering(Chunk.getVertices(), Chunk.getIndices(), Chunk.getChunkPos().getArray());
-            draw(Chunk.getIndicesSize());
-        }
+    public void drawCube(int x,int y,int z, Texture texture){
+        Cube cube = new Cube();
+        CubeDistributor.assignToChunk(cube, chunkBuffer);
+    }
+
+    public void submitDrawCalls(){
+
+    }
+
+    public static void unbindBuffers(){
+        glDeleteBuffers(new int[]{VAO,VBO,IBO});
     }
 
     private void draw(int indicesSize){
@@ -114,3 +102,4 @@ public class Renderer {
 
 
 }
+

@@ -1,2 +1,4 @@
-package Renderer;public class Texture {
+package Renderer;
+
+public class Texture {
 }

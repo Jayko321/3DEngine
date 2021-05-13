@@ -1,3 +1,11 @@
+/*
+* TODO:
+*  1)Renderer functions (cleanup,drawCube,submitDrawCalls)
+*  2)Window class
+*  3)Texture class
+*  4)TextureAtlas Class*/
+
+
 
 import Camera.*;
 import Objects.*;
@@ -14,7 +22,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class main {
+public class test {
     float lastX = w/2f, lastY = h/2f;
     float yaw = -90f,pitch = 0f;
     private final boolean[] keys = new boolean[1024];
@@ -54,17 +62,6 @@ public class main {
 
 
         Renderer renderer = new Renderer(shader);
-        Chunk c1 = new Chunk(new Vec2i(0,0));
-//        Objects.Chunk c2 = new Objects.Chunk(new Vec3i(16,16,16));
-        c1.addCube(new Vec3i(0,0,0));
-        c1.addCube(new Vec3i(15,0,15));
-        c1.addCube(new Vec3i(2,0,4));
-        Chunk c32 = new Chunk(16, 16);
-        c32.addCube(new Vec3i(0,0,0));
-        c32.addCube(new Vec3i(15,0,15));
-        c32.addCube(new Vec3i(2,0,4));
-        renderer.addChunks(c1);
-        renderer.addChunks(c32);
 
 //        for (int i = 0; i < 1024;i++){
 //            Objects.Chunk chunk = new Objects.Chunk(new Vec3i(i*16,i*16,i*16));
@@ -143,7 +140,6 @@ public class main {
             camera.Use();
             camera.do_movement(keys, deltaTime);
             camera.mouse_movement(pitch, yaw);
-            renderer.draw();
 
             glfwSwapBuffers(window);
         }
@@ -189,9 +185,7 @@ public class main {
 
 
     public void cleanup() {
-        glDeleteVertexArrays(VAO);
-        glDeleteBuffers(VBO);
-        glDeleteBuffers(IBO);
+        Renderer.unbindBuffers();
         glfwDestroyWindow(window);
         glfwMakeContextCurrent(NULL);
         glfwTerminate();
@@ -199,7 +193,7 @@ public class main {
 
 
     public static void main(String[] args) throws IOException {
-        new main().start();
+        new test().start();
 
     }
 }

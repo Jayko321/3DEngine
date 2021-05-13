@@ -1,3 +1,5 @@
+package Renderer;
+
 import org.lwjgl.opengl.GL;
 
 import java.io.BufferedReader;
@@ -10,7 +12,7 @@ public class Shader {
     public int Program;
 
 
-    Shader(String vertexShaderFilePath, String fragmentShaderFilePath) throws IOException {
+    public Shader(String vertexShaderFilePath, String fragmentShaderFilePath) throws IOException {
         GL.createCapabilities();
         CharSequence vertexShaderSource = readFileAsString(vertexShaderFilePath);
         CharSequence fragmentShaderSource = readFileAsString(fragmentShaderFilePath);

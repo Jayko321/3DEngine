@@ -1,6 +1,9 @@
+package Objects;
+
 import glm_.vec2.Vec2i;
 import glm_.vec3.Vec3i;
 import org.apache.commons.lang3.ArrayUtils;
+import Util.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +17,13 @@ public class Chunk {
     private final Vec2i ChunkPos;
 
     public Chunk(Vec2i ChunkPos) {
-        if(ChunkPos.getX() % 16 != 0){System.err.println("Wrong chunk position");}
-        if(ChunkPos.getY() % 16 != 0){System.err.println("Wrong chunk position");}
+        if(ChunkPos.getX() % 16 != 0){throw new RuntimeException("Wrong chunk position");}
+        if(ChunkPos.getY() % 16 != 0){throw new RuntimeException("Wrong chunk position");}
         this.ChunkPos = ChunkPos;
     }
     public Chunk(int x, int z) {
-        if(x % 16 != 0){System.err.println("Wrong chunk position");}
-        if(z % 16 != 0){System.err.println("Wrong chunk position");}
+        if(x % 16 != 0){throw new RuntimeException("Wrong chunk position");}
+        if(z % 16 != 0){throw new RuntimeException("Wrong chunk position");}
         this.ChunkPos = new Vec2i(x,z);
     }
 
@@ -41,6 +44,13 @@ public class Chunk {
                 (int)pos.getY(),
                 (int)pos.getZ()
         )));
+    }
+    public void addCube(Cube cube) {
+        Vec3i pos = cube.getPosition();
+        if (pos.getX() >= 16) {return;}
+        if (pos.getY() >= 256){return;}
+        if (pos.getZ() >= 16) {return;}
+        Cubes.putIfAbsent(pos, cube);
     }
 
     void genData(){

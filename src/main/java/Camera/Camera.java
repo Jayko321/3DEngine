@@ -1,3 +1,6 @@
+package Camera;
+
+import Renderer.Shader;
 import glm_.glm;
 import glm_.mat4x4.Mat4;
 import glm_.vec3.Vec3;
@@ -24,13 +27,13 @@ public class Camera {
     private final Vec3 cameraRight = up.cross(cameraDirection);
     private final Vec3 cameraUp = cameraDirection.cross(cameraRight);
     private final int viewProjLoc;
-    Camera(long window, Shader sh, int width, int height){
+    public Camera(long window, Shader sh, int width, int height){
         proj = INSTANCE.perspective(glm.INSTANCE.radians(90f), (float) width/(float) height,0.1f, 64f*32);
         viewProjLoc = glGetUniformLocation(sh.Program, "viewProjection");
     }
 
 
-    void do_movement(boolean[] keys, float delta){
+    public void do_movement(boolean[] keys, float delta){
         float cameraSpeed = 10f * delta;
         if (keys[GLFW_KEY_W]){
             cameraPos.plusAssign(new Vec3(0, cameraSpeed, 0).cross(cameraFront).cross(up));
@@ -52,7 +55,7 @@ public class Camera {
         }
     }
 
-    void mouse_movement(float yaw, float pitch){
+    public void mouse_movement(float yaw, float pitch){
         float X = ((float) cos(pitch) * (float) cos(yaw));
         float Y = ((float) sin(yaw));
         float Z = ((float) cos(yaw) * (float) sin(pitch));
@@ -67,7 +70,7 @@ public class Camera {
 
 
 
-    void Use(){
+    public void Use(){
         Mat4 view = INSTANCE.lookAt(cameraPos,
                                     cameraPos.plus(cameraFront),
                                     up);

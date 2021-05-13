@@ -1,3 +1,6 @@
+package Objects;
+
+import Renderer.Texture;
 import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 
@@ -6,17 +9,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-class Cube {
+public class Cube {
 
     private final Vec3i position;
+    private Texture texture = new Texture();
     HashMap<edges, Float[]> vertices = new HashMap<>();
     HashMap<edges, Integer[]> vert = new HashMap<>();
-
-    public Cube() {
-        this.position = new Vec3i(0,0,0);
-        genVertices();
-    }
-
     public enum edges{
         RIGHT,
         LEFT,
@@ -26,17 +24,37 @@ class Cube {
         BACK
     }
 
+    public Cube() {
+        this.position = new Vec3i(0,0,0);
+        genVertices();
+    }
+
     Cube(Vec3i pos){
         this.position = pos == null ? new Vec3i(0,0,0) : pos;
         genVertices();
     }
+    Cube(Vec3i pos, Texture texture){
+        this.position = pos == null ? new Vec3i(0,0,0) : pos;
+        this.texture = texture;
+        genVertices();
+    }
+
+
+
+
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
 
     private void genVertices() {
         int X = position.getX();
-        int Y = -position.getY();
+        int Y = position.getY();
         int Z = position.getZ();
-        float size = 1f;
-        int iSize = (int) size;
+        int size = 1;
 
         {
             int a1;
@@ -44,9 +62,9 @@ class Cube {
             int a3;
             int a4;
             a1 = X | Y << 8 | Z << 16;
-            a2 = iSize + X | Y << 8 | Z << 16 | 1 << 24;
-            a3 = iSize + X | iSize + Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | iSize + Y << 8 | Z << 16 | 1 << 25;
+            a2 = size + X | Y << 8 | Z << 16 | 1 << 24;
+            a3 = size + X | size + Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | size + Y << 8 | Z << 16 | 1 << 25;
             this.vert.put(edges.BACK, new Integer[]{a1, a2, a3, a4});
         }
 
@@ -64,10 +82,10 @@ class Cube {
             int a2;
             int a3;
             int a4;
-            a1 = X | Y << 8 | iSize + Z << 16;
-            a2 = iSize + X | Y << 8 | iSize + Z << 16 | 1 << 24;
-            a3 = iSize + X | iSize + Y << 8 | iSize + Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | iSize + Y << 8 | iSize + Z << 16 | 1 << 25;
+            a1 = X | Y << 8 | size + Z << 16;
+            a2 = size + X | Y << 8 | size + Z << 16 | 1 << 24;
+            a3 = size + X | size + Y << 8 | size + Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | size + Y << 8 | size + Z << 16 | 1 << 25;
             this.vert.put(edges.FRONT, new Integer[]{a1, a2, a3, a4});
         }
 
@@ -76,10 +94,10 @@ class Cube {
             int a2;
             int a3;
             int a4;
-            a1 = X | iSize + Y << 8 | iSize + Z << 16;
-            a2 = X | iSize + Y << 8 | Z << 16 | 1 << 24;
+            a1 = X | size + Y << 8 | size + Z << 16;
+            a2 = X | size + Y << 8 | Z << 16 | 1 << 24;
             a3 = X | Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | Y << 8 | iSize + Z << 16 | 1 << 25;
+            a4 = X | Y << 8 | size + Z << 16 | 1 << 25;
             this.vert.put(edges.RIGHT, new Integer[]{a1, a2, a3, a4});
         }
 
@@ -88,10 +106,10 @@ class Cube {
             int a2;
             int a3;
             int a4;
-            a1 = iSize + X | iSize + Y << 8 | iSize + Z << 16;
-            a2 = iSize + X | iSize + Y << 8 | Z << 16 | 1 << 24;
-            a3 = iSize + X | Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
-            a4 = iSize + X | Y << 8 | iSize + Z << 16 | 1 << 25;
+            a1 = size + X | size + Y << 8 | size + Z << 16;
+            a2 = size + X | size + Y << 8 | Z << 16 | 1 << 24;
+            a3 = size + X | Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
+            a4 = size + X | Y << 8 | size + Z << 16 | 1 << 25;
             this.vert.put(edges.LEFT, new Integer[]{a1, a2, a3, a4});
         }
 
@@ -101,9 +119,9 @@ class Cube {
             int a3;
             int a4;
             a1 = X | Y << 8 | Z << 16;
-            a2 = iSize + X | Y << 8 | Z << 16 | 1 << 24;
-            a3 = iSize + X | Y << 8 | iSize + Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | Y << 8 | iSize + Z << 16 | 1 << 25;
+            a2 = size + X | Y << 8 | Z << 16 | 1 << 24;
+            a3 = size + X | Y << 8 | size + Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | Y << 8 | size + Z << 16 | 1 << 25;
             this.vert.put(edges.TOP, new Integer[]{a1, a2, a3, a4});
         }
 
@@ -112,10 +130,10 @@ class Cube {
             int a2;
             int a3;
             int a4;
-            a1 = X | iSize + Y << 8 | Z << 16;
-            a2 = iSize + X | iSize + Y << 8 | Z << 16 | 1 << 24;
-            a3 = iSize + X | iSize + Y << 8 | iSize + Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | iSize + Y << 8 | iSize + Z << 16 | 1 << 25;
+            a1 = X | size + Y << 8 | Z << 16;
+            a2 = size + X | size + Y << 8 | Z << 16 | 1 << 24;
+            a3 = size + X | size + Y << 8 | size + Z << 16 | 1 << 24 | 1 << 25;
+            a4 = X | size + Y << 8 | size + Z << 16 | 1 << 25;
             this.vert.put(edges.BOTTOM, new Integer[]{a1, a2, a3, a4});
         }
 
