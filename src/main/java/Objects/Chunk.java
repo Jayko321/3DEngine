@@ -45,6 +45,17 @@ public class Chunk {
                 (int)pos.getZ()
         )));
     }
+    public void addCube(int x, int y , int z) {
+        Vec3i pos = new Vec3i(x, y, z);
+        if (pos.getX() >= 16) {return;}
+        if (pos.getY() >= 256){return;}
+        if (pos.getZ() >= 16) {return;}
+        Cubes.putIfAbsent(pos, new Cube(new Vec3i(
+                (int)pos.getX(),
+                (int)pos.getY(),
+                (int)pos.getZ()
+        )));
+    }
     public void addCube(Cube cube) {
         Vec3i pos = cube.getPosition();
         if (pos.getX() >= 16) {return;}
@@ -82,5 +93,4 @@ public class Chunk {
         return ArrayUtils.toPrimitive(vertices.toArray(new Integer[0]));
     }
 
-    //draw func
 }

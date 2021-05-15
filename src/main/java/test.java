@@ -50,7 +50,7 @@ public class test {
         GL.createCapabilities();
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        Shader shader = new Shader("D:\\3DEngine\\src\\main\\java\\vertexShader.glsl",
+        Shader shader = new Shader("D:\\3DEngine\\src\\main\\java\\Renderer\\Shaders\\vertexShader.glsl",
                 "D:\\3DEngine\\src\\main\\java\\Renderer\\Shaders\\fragmentShader.glsl");
         Camera camera = new Camera(window, shader, w, h);
 //        error_catching();
@@ -136,10 +136,16 @@ public class test {
             //начало отрисовки
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
             shader.Use();
             camera.Use();
             camera.do_movement(keys, deltaTime);
             camera.mouse_movement(pitch, yaw);
+            renderer.drawCube(0,0,0,new Texture());
+            renderer.drawCube(17,0,17,new Texture());
+            renderer.drawCube(1,0,1,new Texture());
+            renderer.drawCube(-1,0,-1,new Texture());
+            renderer.submitDrawCalls();
 
             glfwSwapBuffers(window);
         }

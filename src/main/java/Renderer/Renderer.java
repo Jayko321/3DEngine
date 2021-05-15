@@ -1,5 +1,6 @@
 package Renderer;
 
+import Objects.Chunk;
 import Objects.ChunkBuffer;
 import Objects.Cube;
 import Objects.CubeDistributor;
@@ -47,7 +48,7 @@ public class Renderer {
 
         int SIZEOF_FLOAT = 4;
         glEnableVertexAttribArray(0);
-        glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, SIZEOF_FLOAT, NULL);
+        glVertexAttribIPointer(0, 1, GL_INT, SIZEOF_FLOAT, NULL);
 
         glBindVertexArray(0);
     }
@@ -76,17 +77,24 @@ public class Renderer {
 
 
     public void drawCube(Vec3i pos, Texture texture){
-
-    }
-
-
-    public void drawCube(int x,int y,int z, Texture texture){
         Cube cube = new Cube();
         CubeDistributor.assignToChunk(cube, chunkBuffer);
     }
 
-    public void submitDrawCalls(){
 
+    public void drawCube(int x,int y,int z, Texture texture){
+        Cube cube = new Cube(x,y,z,texture);
+        CubeDistributor.assignToChunk(cube, chunkBuffer);
+    }
+
+    public void submitDrawCalls(){
+        Chunk[] chunkArray = chunkBuffer.getAllChunks();
+        for (Chunk chunk : chunkArray){
+            int[] vertices = chunk.getVertices();
+            int[] indices = chunk.getIndices();
+            prepareRendering(vertices,indices, chunk.getChunkPos().getArray());
+            draw(indices.length);
+        }
     }
 
     public static void unbindBuffers(){

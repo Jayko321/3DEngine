@@ -38,6 +38,11 @@ public class Cube {
         this.texture = texture;
         genVertices();
     }
+    public Cube(int x, int y, int z, Texture texture){
+        this.position = new Vec3i(x, y, z);
+        this.texture = texture;
+        genVertices();
+    }
 
 
 
@@ -68,14 +73,14 @@ public class Cube {
             this.vert.put(edges.BACK, new Integer[]{a1, a2, a3, a4});
         }
 
-//        for(Integer a : this.vert.get(edges.BACK)){
-//            System.out.println("X = " + (a & 0xFF) + "\n" +
-//                    "Y = " + ((a & 0xFF00) >> 8) + "\n" +
-//                    "Z = " + ((a & 0xFF0000) >> 16 ) + "\n" +
-//                    "texCoord1 = " + ((a & 0x1000000) >> 24) +
-//                    "\ntexCoord2 = " + ((a & 0x2000000) >> 25)
-//            );
-//        }
+        for(Integer a : this.vert.get(edges.BACK)){
+            System.out.println("X = " + (a & 0xFF) + "\n" +
+                    "Y = " + ((a & 0xFF00) >> 8) + "\n" +
+                    "Z = " + ((a & 0xFF0000) >> 16 ) + "\n" +
+                    "texCoord1 = " + ((a & 0x1000000) >> 24) +
+                    "\ntexCoord2 = " + ((a & 0x2000000) >> 25)
+            );
+        }
 
         {
             int a1;

@@ -38,6 +38,16 @@ public class ChunkBuffer {
         return indices;
     }
 
+    public Chunk[] getAllChunks(){
+        Chunk[] chunkArray = new Chunk[chunkBuffer.size()];
+        int a = 0;
+        for (Map.Entry<Vec2i, Chunk> chunk: chunkBuffer.entrySet()) {
+            chunkArray[a] = chunk.getValue();
+            a++;
+        }
+        return chunkArray;
+    }
+
 
     public Chunk getChunk(int x,int z){
         return chunkBuffer.get(new Vec2i(x, z));
