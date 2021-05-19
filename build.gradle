@@ -14,8 +14,14 @@ repositories {
 }
 
 
-jar{
+jar {
+    manifest {
+        attributes "Main-Class": "src/main/java/test.java"
+    }
 
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 dependencies {
