@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Util {
+    public static int SIZEOF_FLOAT = Float.BYTES;
 
     public static int[] genIndices(float[] vertices){
         ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 2, 3, 0));
@@ -27,7 +28,7 @@ public class Util {
     }
     public static int[] genIndices(int verticesSize){
         ArrayList<Integer> indices = new ArrayList<Integer>(Arrays.asList(0, 1, 2, 2, 3, 0));
-        for (int i = 0; i+4 <= verticesSize; i+=4) {
+        for (int i = 0; i+4 <= verticesSize / 5; i+=4) {
             int last = indices.get(indices.size() - 1) + 4;
             indices.addAll(Arrays.asList(last, last + 1 , last + 2, last+2 , last+3, last));
         }

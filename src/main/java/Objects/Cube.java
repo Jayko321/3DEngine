@@ -33,7 +33,7 @@ public class Cube {
         this.position = pos == null ? new Vec3i(0,0,0) : pos;
         genVertices();
     }
-    Cube(Vec3i pos, Texture texture){
+    public Cube(Vec3i pos, Texture texture){
         this.position = pos == null ? new Vec3i(0,0,0) : pos;
         this.texture = texture;
         genVertices();
@@ -41,6 +41,10 @@ public class Cube {
     public Cube(int x, int y, int z, Texture texture){
         this.position = new Vec3i(x, y, z);
         this.texture = texture;
+        genVertices();
+    }
+    public Cube(int x, int y, int z){
+        this.position = new Vec3i(x, y, z);
         genVertices();
     }
 
@@ -59,90 +63,41 @@ public class Cube {
         int X = position.getX();
         int Y = position.getY();
         int Z = position.getZ();
-        int size = 1;
+        float size = 1f;
 
-        {
-            int a1;
-            int a2;
-            int a3;
-            int a4;
-            a1 = X | Y << 8 | Z << 16;
-            a2 = size + X | Y << 8 | Z << 16 | 1 << 24;
-            a3 = size + X | size + Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | size + Y << 8 | Z << 16 | 1 << 25;
-            this.vert.put(edges.BACK, new Integer[]{a1, a2, a3, a4});
-        }
-
-        for(Integer a : this.vert.get(edges.BACK)){
-            System.out.println("X = " + (a & 0xFF) + "\n" +
-                    "Y = " + ((a & 0xFF00) >> 8) + "\n" +
-                    "Z = " + ((a & 0xFF0000) >> 16 ) + "\n" +
-                    "texCoord1 = " + ((a & 0x1000000) >> 24) +
-                    "\ntexCoord2 = " + ((a & 0x2000000) >> 25)
-            );
-        }
-
-        {
-            int a1;
-            int a2;
-            int a3;
-            int a4;
-            a1 = X | Y << 8 | size + Z << 16;
-            a2 = size + X | Y << 8 | size + Z << 16 | 1 << 24;
-            a3 = size + X | size + Y << 8 | size + Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | size + Y << 8 | size + Z << 16 | 1 << 25;
-            this.vert.put(edges.FRONT, new Integer[]{a1, a2, a3, a4});
-        }
-
-        {
-            int a1;
-            int a2;
-            int a3;
-            int a4;
-            a1 = X | size + Y << 8 | size + Z << 16;
-            a2 = X | size + Y << 8 | Z << 16 | 1 << 24;
-            a3 = X | Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | Y << 8 | size + Z << 16 | 1 << 25;
-            this.vert.put(edges.RIGHT, new Integer[]{a1, a2, a3, a4});
-        }
-
-        {
-            int a1;
-            int a2;
-            int a3;
-            int a4;
-            a1 = size + X | size + Y << 8 | size + Z << 16;
-            a2 = size + X | size + Y << 8 | Z << 16 | 1 << 24;
-            a3 = size + X | Y << 8 | Z << 16 | 1 << 24 | 1 << 25;
-            a4 = size + X | Y << 8 | size + Z << 16 | 1 << 25;
-            this.vert.put(edges.LEFT, new Integer[]{a1, a2, a3, a4});
-        }
-
-        {
-            int a1;
-            int a2;
-            int a3;
-            int a4;
-            a1 = X | Y << 8 | Z << 16;
-            a2 = size + X | Y << 8 | Z << 16 | 1 << 24;
-            a3 = size + X | Y << 8 | size + Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | Y << 8 | size + Z << 16 | 1 << 25;
-            this.vert.put(edges.TOP, new Integer[]{a1, a2, a3, a4});
-        }
-
-        {
-            int a1;
-            int a2;
-            int a3;
-            int a4;
-            a1 = X | size + Y << 8 | Z << 16;
-            a2 = size + X | size + Y << 8 | Z << 16 | 1 << 24;
-            a3 = size + X | size + Y << 8 | size + Z << 16 | 1 << 24 | 1 << 25;
-            a4 = X | size + Y << 8 | size + Z << 16 | 1 << 25;
-            this.vert.put(edges.BOTTOM, new Integer[]{a1, a2, a3, a4});
-        }
+        this.vertices.put(edges.BACK, new Float[]{//back
+                0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
+                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
+                size + X, size + Y, 0.0f + Z, 1.0f, 1.0f,
+                0.0f + X, size + Y, 0.0f + Z, 0.0f, 1.0f});
+        this.vertices.put(edges.FRONT, new Float[]{//front
+                0.0f + X, 0.0f + Y, size + Z, 0.0f, 0.0f,
+                size + X, 0.0f + Y, size + Z, 1.0f, 0.0f,
+                size + X, size + Y, size + Z, 1.0f, 1.0f,
+                0.0f + X, size + Y, size + Z, 0.0f, 1.0f});
+        this.vertices.put(edges.RIGHT, new Float[]{//RIGHT
+                0.0f + X, size + Y, size + Z, 0.0f, 0.0f,
+                0.0f + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
+                0.0f + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
+                0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
+        this.vertices.put(edges.LEFT, new Float[]{//left
+                size + X, size + Y, size + Z, 0.0f, 0.0f,
+                size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
+                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
+                size + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
+        this.vertices.put(edges.TOP, new Float[]{//top
+                0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
+                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
+                size + X, 0.0f + Y, size + Z, 1.0f, 1.0f,
+                0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
+        this.vertices.put(edges.BOTTOM, new Float[]{//bottom
+                0.0f + X, size + Y, 0.0f + Z, 0.0f, 0.0f,
+                size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
+                size + X, size + Y, size + Z, 1.0f, 1.0f,
+                0.0f + X, size + Y, size + Z, 0.0f, 1.0f});
 
     }
+
 
     void move(Vec3i pos){
         this.position.plusAssign(pos);
@@ -194,17 +149,9 @@ public class Cube {
         return position;
     }
 
-    public ArrayList<Float> getVert(){
+    public ArrayList<Float> getVertices(){
         ArrayList<Float> v = new ArrayList<>();
         for(Map.Entry<edges, Float[]> i : vertices.entrySet()){
-            v.addAll(Arrays.asList(i.getValue()));
-        }
-        return v;
-    }
-
-    public ArrayList<Integer> getVertices(){
-        ArrayList<Integer> v = new ArrayList<>();
-        for(Map.Entry<edges, Integer[]> i : vert.entrySet()){
             v.addAll(Arrays.asList(i.getValue()));
         }
         return v;

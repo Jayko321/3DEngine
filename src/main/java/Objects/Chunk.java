@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Chunk {
     private final HashMap<Vec3i, Cube> Cubes = new HashMap<>(16);
-    private final List<Integer> vertices = new ArrayList<>(16*120);
+    private final List<Float> vertices = new ArrayList<>(16*120);
     private int[] indices = new int[]{};
     private final Vec2i ChunkPos;
 
@@ -27,7 +27,10 @@ public class Chunk {
         this.ChunkPos = new Vec2i(x,z);
     }
 
-    public Vec2i getChunkPos() {
+    public int[] getChunkPos() {
+        return ChunkPos.getArray();
+    }
+    public Vec2i getChunkPosV() {
         return ChunkPos;
     }
 
@@ -45,7 +48,7 @@ public class Chunk {
                 (int)pos.getZ()
         )));
     }
-    public void addCube(int x, int y , int z) {
+    public void addCube(int x, int y, int z) {
         Vec3i pos = new Vec3i(x, y, z);
         if (pos.getX() >= 16) {return;}
         if (pos.getY() >= 256){return;}
@@ -86,11 +89,11 @@ public class Chunk {
         return indices.length;
     }
 
-    public int[] getVertices() {
+    public float[] getVertices() {
         if(vertices.size() == 0){
             genData();
         }
-        return ArrayUtils.toPrimitive(vertices.toArray(new Integer[0]));
+        return ArrayUtils.toPrimitive(vertices.toArray(new Float[0]));
     }
 
 }

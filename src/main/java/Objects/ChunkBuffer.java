@@ -2,24 +2,28 @@ package Objects;
 
 import glm_.vec2.Vec2i;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChunkBuffer {
     private final HashMap<Vec2i, Chunk> chunkBuffer;
+    private final List<Chunk> wasCreatedBefore;
     public ChunkBuffer() {
         chunkBuffer = new HashMap<>();
+        wasCreatedBefore = new ArrayList<Chunk>();
     }
 
     public HashMap<Vec2i, Chunk> getChunkBuffer() {
         return chunkBuffer;
     }
 
-    public int[][] getVertices(){
-        int[][] vertices = new int[chunkBuffer.size()][];
+    public float[][] getVertices(){
+        float[][] vertices = new float[chunkBuffer.size()][];
         int a = 0;
         for (Map.Entry<Vec2i, Chunk> chunks: chunkBuffer.entrySet()){
-            int[] vert = chunks.getValue().getVertices();
+            float[] vert = chunks.getValue().getVertices();
             vertices[a] = vert;
             a++;
         }
@@ -48,6 +52,9 @@ public class ChunkBuffer {
         return chunkArray;
     }
 
+    public boolean chunkAlreadyExists(Chunk chunk){return wasCreatedBefore.contains(chunk);}
+
+    public void markChunkAsCreated(Chunk chunk){wasCreatedBefore.add(chunk);}
 
     public Chunk getChunk(int x,int z){
         return chunkBuffer.get(new Vec2i(x, z));
@@ -66,11 +73,11 @@ public class ChunkBuffer {
     }
 
     public void putChunk(Chunk chunk){
-        chunkBuffer.put(chunk.getChunkPos(), chunk);
+        chunkBuffer.put(chunk.getChunkPosV(), chunk);
     }
 
     public void deleteChunk(Chunk chunk){
-        chunkBuffer.remove(chunk.getChunkPos());
+        chunkBuffer.remove(chunk.getChunkPosV());
     }
 
 }

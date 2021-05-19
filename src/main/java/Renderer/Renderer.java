@@ -10,6 +10,7 @@ import org.lwjgl.stb.STBImage;
 
 import java.nio.ByteBuffer;
 
+import static Util.Util.SIZEOF_FLOAT;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -28,35 +29,43 @@ public class Renderer {
         VBO = glGenBuffers();
         IBO = glGenBuffers();
         this.chunkPosLoc = glGetUniformLocation(shader.Program, "chunkPos");
+
         setTexture();
+        preAlloc();
     }
 
-    private void prepareRendering(int[] vertices, int[] indices, int[] chunkPos) {
-
-        glUniform2iv(chunkPosLoc, chunkPos);
+    private void preAlloc(){
         glBindVertexArray(VAO);
-
-
-
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
-
-
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-
-        int SIZEOF_FLOAT = 4;
+        glBufferData(GL_ARRAY_BUFFER, 16L*16*256*SIZEOF_FLOAT, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 16L*16*256*SIZEOF_FLOAT / 5, GL_DYNAMIC_DRAW);
         glEnableVertexAttribArray(0);
-        glVertexAttribIPointer(0, 1, GL_INT, SIZEOF_FLOAT, NULL);
-
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(0, 3, GL_FLOAT,false,5 * SIZEOF_FLOAT, 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT,false,5 * SIZEOF_FLOAT, 12);
         glBindVertexArray(0);
     }
 
 
-    private void replaceDataInVertexBuffer(int[] vertices){
+    private void prepareRendering(float[] vertices, int[] indices, int[] chunkPos) {
+        glBindVertexArray(VAO);
+
+
+
+
+        glUniform2iv(chunkPosLoc, chunkPos);
+        glBindVertexArray(0);
+    }
+
+
+    private void replaceDataInVertexBuffer(float[] vertices, int[] indices,int[] chunkPos){
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER , 0, indices);
+        glUniform2iv(chunkPosLoc, chunkPos);
     }
 
     private void setTexture(){
@@ -77,7 +86,7 @@ public class Renderer {
 
 
     public void drawCube(Vec3i pos, Texture texture){
-        Cube cube = new Cube();
+        Cube cube = new Cube(pos, texture);
         CubeDistributor.assignToChunk(cube, chunkBuffer);
     }
 
@@ -86,14 +95,24 @@ public class Renderer {
         Cube cube = new Cube(x,y,z,texture);
         CubeDistributor.assignToChunk(cube, chunkBuffer);
     }
+    public void drawCube(int x,int y,int z){
+        Cube cube = new Cube(x,y,z);
+        CubeDistributor.assignToChunk(cube, chunkBuffer);
+    }
+
+    public void setViewport(int width, int height){
+        glViewport(0,0, width, height);
+    }
 
     public void submitDrawCalls(){
         Chunk[] chunkArray = chunkBuffer.getAllChunks();
         for (Chunk chunk : chunkArray){
-            int[] vertices = chunk.getVertices();
-            int[] indices = chunk.getIndices();
-            prepareRendering(vertices,indices, chunk.getChunkPos().getArray());
-            draw(indices.length);
+            {
+                float[] vertices = chunk.getVertices();
+                int[] indices = chunk.getIndices();
+                replaceDataInVertexBuffer(vertices,indices,chunk.getChunkPos());
+                draw(chunk.getIndicesSize());
+            }
         }
     }
 
