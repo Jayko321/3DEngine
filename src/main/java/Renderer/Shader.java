@@ -1,8 +1,10 @@
 package Renderer;
 
+import org.apache.commons.io.FileUtils;
 import org.lwjgl.opengl.GL;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -12,7 +14,7 @@ public class Shader {
     public int Program;
 
 
-    public Shader(String vertexShaderFilePath, String fragmentShaderFilePath) throws IOException {
+    public Shader(String vertexShaderFilePath, String fragmentShaderFilePath){
         GL.createCapabilities();
         CharSequence vertexShaderSource = readFileAsString(vertexShaderFilePath);
         CharSequence fragmentShaderSource = readFileAsString(fragmentShaderFilePath);
@@ -57,17 +59,15 @@ public class Shader {
     }
 
 
-    private String readFileAsString(String filePath) throws IOException {
-        StringBuilder fileData = new StringBuilder();
-        BufferedReader reader = new BufferedReader(
-                new FileReader(filePath));
-        char[] buf = new char[1024];
-        int numRead = 0;
-        while ((numRead = reader.read(buf)) != -1) {
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
+    private String readFileAsString(String filePath)  {
+        String content = "";
+        File file = new File(filePath);
+        try {
+            // Read the entire contents of sample.txt
+            content = FileUtils.readFileToString(file, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        reader.close();
-        return fileData.toString();
+        return content;
     }
 }

@@ -1,6 +1,7 @@
 package Objects;
 
 import Callbacks.MouseCallback;
+import VOEngine.VOEngine;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 

@@ -10,7 +10,9 @@ import org.lwjgl.stb.STBImage;
 
 import java.nio.ByteBuffer;
 
+import static Renderer.TextureAtlas.getTexture;
 import static Util.Util.SIZEOF_FLOAT;
+import static VOEngine.VOEngine.getShader;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -19,18 +21,17 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Renderer {
     private static int VBO,IBO,VAO;
-    private int texture;
+
     private final int chunkPosLoc;
     private final ChunkBuffer chunkBuffer = new ChunkBuffer();
 
-    public Renderer(Shader shader) {
+    public Renderer() {
         GL.createCapabilities();
         VAO = glGenVertexArrays();
         VBO = glGenBuffers();
         IBO = glGenBuffers();
-        this.chunkPosLoc = glGetUniformLocation(shader.Program, "chunkPos");
+        this.chunkPosLoc = glGetUniformLocation(getShader().Program, "chunkPos");
 
-        setTexture();
         preAlloc();
     }
 
@@ -68,21 +69,6 @@ public class Renderer {
         glUniform2iv(chunkPosLoc, chunkPos);
     }
 
-    private void setTexture(){
-        String texturePath = "D:\\3DEngine\\src\\main\\resources\\container.jpg";
-        int[] width = new int[1], height = new int[1], channels = new int[1];
-        ByteBuffer image = STBImage.stbi_load(texturePath, width, height, channels, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width[0], height[0], 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        assert image != null;
-        STBImage.stbi_image_free(image);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
 
 
     public void drawCube(Vec3i pos, Texture texture){
@@ -93,10 +79,6 @@ public class Renderer {
 
     public void drawCube(int x,int y,int z, Texture texture){
         Cube cube = new Cube(x,y,z,texture);
-        CubeDistributor.assignToChunk(cube, chunkBuffer);
-    }
-    public void drawCube(int x,int y,int z){
-        Cube cube = new Cube(x,y,z);
         CubeDistributor.assignToChunk(cube, chunkBuffer);
     }
 
@@ -121,7 +103,7 @@ public class Renderer {
     }
 
     private void draw(int indicesSize){
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, getTexture());
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

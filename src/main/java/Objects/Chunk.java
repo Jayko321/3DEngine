@@ -1,5 +1,6 @@
 package Objects;
 
+import Renderer.Texture;
 import glm_.vec2.Vec2i;
 import glm_.vec3.Vec3i;
 import org.apache.commons.lang3.ArrayUtils;
@@ -38,7 +39,7 @@ public class Chunk {
         return Cubes.get(position);
     }
 
-    public void addCube(Vec3i pos) {
+    public void addCube(Vec3i pos, Texture texture) {
         if (pos.getX() >= 16) {return;}
         if (pos.getY() >= 256){return;}
         if (pos.getZ() >= 16) {return;}
@@ -46,9 +47,9 @@ public class Chunk {
                 (int)pos.getX(),
                 (int)pos.getY(),
                 (int)pos.getZ()
-        )));
+        ), texture));
     }
-    public void addCube(int x, int y, int z) {
+    public void addCube(int x, int y, int z, Texture texture) {
         Vec3i pos = new Vec3i(x, y, z);
         if (pos.getX() >= 16) {return;}
         if (pos.getY() >= 256){return;}
@@ -57,7 +58,7 @@ public class Chunk {
                 (int)pos.getX(),
                 (int)pos.getY(),
                 (int)pos.getZ()
-        )));
+        ), texture));
     }
     public void addCube(Cube cube) {
         Vec3i pos = cube.getPosition();

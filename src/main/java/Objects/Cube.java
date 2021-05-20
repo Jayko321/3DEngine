@@ -1,6 +1,7 @@
 package Objects;
 
 import Renderer.Texture;
+import glm_.vec2.Vec2;
 import glm_.vec3.Vec3;
 import glm_.vec3.Vec3i;
 
@@ -12,7 +13,8 @@ import java.util.Map;
 public class Cube {
 
     private final Vec3i position;
-    private Texture texture = new Texture();
+    private Vec2[] texCoords = new Vec2[4];
+    private Texture texture;
     HashMap<edges, Float[]> vertices = new HashMap<>();
     HashMap<edges, Integer[]> vert = new HashMap<>();
     public enum edges{
@@ -29,30 +31,37 @@ public class Cube {
         genVertices();
     }
 
-    Cube(Vec3i pos){
-        this.position = pos == null ? new Vec3i(0,0,0) : pos;
-        genVertices();
-    }
+//    Cube(Vec3i pos){
+//        this.position = pos == null ? new Vec3i(0,0,0) : pos;
+//        genVertices();
+//    }
     public Cube(Vec3i pos, Texture texture){
         this.position = pos == null ? new Vec3i(0,0,0) : pos;
         this.texture = texture;
+        setTexCoords(texture.getTexCoords());
         genVertices();
     }
     public Cube(int x, int y, int z, Texture texture){
         this.position = new Vec3i(x, y, z);
         this.texture = texture;
+        setTexCoords(texture.getTexCoords());
         genVertices();
     }
-    public Cube(int x, int y, int z){
-        this.position = new Vec3i(x, y, z);
-        genVertices();
-    }
+//    public Cube(int x, int y, int z){
+//        this.position = new Vec3i(x, y, z);
+//        genVertices();
+//    }
 
 
 
 
     public Texture getTexture() {
         return texture;
+    }
+
+    private void setTexCoords(Vec2[] texCoords){
+        if (texCoords.length != 4){return;}
+        this.texCoords = texCoords;
     }
 
     public void setTexture(Texture texture) {
@@ -66,35 +75,35 @@ public class Cube {
         float size = 1f;
 
         this.vertices.put(edges.BACK, new Float[]{//back
-                0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
-                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, size + Y, 0.0f + Z, 1.0f, 1.0f,
-                0.0f + X, size + Y, 0.0f + Z, 0.0f, 1.0f});
+                0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[0].getX(), texCoords[0].getY(),
+                size + X, 0.0f + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
+                size + X, size + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
+                0.0f + X, size + Y, 0.0f + Z, texCoords[3].getX(), texCoords[3].getY()});
         this.vertices.put(edges.FRONT, new Float[]{//front
-                0.0f + X, 0.0f + Y, size + Z, 0.0f, 0.0f,
-                size + X, 0.0f + Y, size + Z, 1.0f, 0.0f,
-                size + X, size + Y, size + Z, 1.0f, 1.0f,
-                0.0f + X, size + Y, size + Z, 0.0f, 1.0f});
+                0.0f + X, 0.0f + Y, size + Z, texCoords[0].getX(), texCoords[0].getY(),
+                size + X, 0.0f + Y, size + Z, texCoords[1].getX(), texCoords[1].getY(),
+                size + X, size + Y, size + Z, texCoords[2].getX(), texCoords[2].getY(),
+                0.0f + X, size + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
         this.vertices.put(edges.RIGHT, new Float[]{//RIGHT
-                0.0f + X, size + Y, size + Z, 0.0f, 0.0f,
-                0.0f + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                0.0f + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
-                0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
+                0.0f + X, size + Y, size + Z, texCoords[0].getX(), texCoords[0].getY(),
+                0.0f + X, size + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
+                0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
+                0.0f + X, 0.0f + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
         this.vertices.put(edges.LEFT, new Float[]{//left
-                size + X, size + Y, size + Z, 0.0f, 0.0f,
-                size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 1.0f,
-                size + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
+                size + X, size + Y, size + Z, texCoords[0].getX(), texCoords[0].getY(),
+                size + X, size + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
+                size + X, 0.0f + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
+                size + X, 0.0f + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
         this.vertices.put(edges.TOP, new Float[]{//top
-                0.0f + X, 0.0f + Y, 0.0f + Z, 0.0f, 0.0f,
-                size + X, 0.0f + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, 0.0f + Y, size + Z, 1.0f, 1.0f,
-                0.0f + X, 0.0f + Y, size + Z, 0.0f, 1.0f});
+                0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[0].getX(), texCoords[0].getY(),
+                size + X, 0.0f + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
+                size + X, 0.0f + Y, size + Z, texCoords[2].getX(), texCoords[2].getY(),
+                0.0f + X, 0.0f + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
         this.vertices.put(edges.BOTTOM, new Float[]{//bottom
-                0.0f + X, size + Y, 0.0f + Z, 0.0f, 0.0f,
-                size + X, size + Y, 0.0f + Z, 1.0f, 0.0f,
-                size + X, size + Y, size + Z, 1.0f, 1.0f,
-                0.0f + X, size + Y, size + Z, 0.0f, 1.0f});
+                0.0f + X, size + Y, 0.0f + Z, texCoords[0].getX(), texCoords[0].getY(),
+                size + X, size + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
+                size + X, size + Y, size + Z, texCoords[2].getX(), texCoords[2].getY(),
+                0.0f + X, size + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
 
     }
 
