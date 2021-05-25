@@ -68,6 +68,13 @@ public class Cube {
         this.texture = texture;
     }
 
+    public void setTextureForEdge(edges edge,Texture texture){
+        Float[] vertices = this.vertices.get(edge);
+        vertices[4] = texture.getTexCoords()[0].getX();
+        vertices[5] = texture.getTexCoords()[0].getY();
+    }
+
+
     private void genVertices() {
         int X = position.getX();
         int Y = position.getY();
@@ -75,25 +82,25 @@ public class Cube {
         float size = 1f;
 
         this.vertices.put(edges.BACK, new Float[]{//back
-                0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[0].getX(), texCoords[0].getY(),
-                size + X, 0.0f + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
-                size + X, size + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
-                0.0f + X, size + Y, 0.0f + Z, texCoords[3].getX(), texCoords[3].getY()});
-        this.vertices.put(edges.FRONT, new Float[]{//front
-                0.0f + X, 0.0f + Y, size + Z, texCoords[0].getX(), texCoords[0].getY(),
-                size + X, 0.0f + Y, size + Z, texCoords[1].getX(), texCoords[1].getY(),
-                size + X, size + Y, size + Z, texCoords[2].getX(), texCoords[2].getY(),
-                0.0f + X, size + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
-        this.vertices.put(edges.RIGHT, new Float[]{//RIGHT
-                0.0f + X, size + Y, size + Z, texCoords[0].getX(), texCoords[0].getY(),
-                0.0f + X, size + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
-                0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
-                0.0f + X, 0.0f + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
-        this.vertices.put(edges.LEFT, new Float[]{//left
-                size + X, size + Y, size + Z, texCoords[0].getX(), texCoords[0].getY(),
+                0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[3].getX(), texCoords[3].getY(),
+                size + X, 0.0f + Y, 0.0f + Z, texCoords[0].getX(), texCoords[0].getY(),
                 size + X, size + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),
-                size + X, 0.0f + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
-                size + X, 0.0f + Y, size + Z, texCoords[3].getX(), texCoords[3].getY()});
+                0.0f + X, size + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY()});
+        this.vertices.put(edges.FRONT, new Float[]{//front
+                0.0f + X, 0.0f + Y, size + Z, texCoords[3].getX(), texCoords[3].getY(),
+                size + X, 0.0f + Y, size + Z, texCoords[0].getX(), texCoords[0].getY(),
+                size + X, size + Y, size + Z, texCoords[1].getX(), texCoords[1].getY(),
+                0.0f + X, size + Y, size + Z, texCoords[2].getX(), texCoords[2].getY()});
+        this.vertices.put(edges.RIGHT, new Float[]{//RIGHT
+                0.0f + X, size + Y, size + Z, texCoords[1].getX(), texCoords[1].getY(),
+                0.0f + X, size + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
+                0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[3].getX(), texCoords[3].getY(),
+                0.0f + X, 0.0f + Y, size + Z, texCoords[0].getX(), texCoords[0].getY()});
+        this.vertices.put(edges.LEFT, new Float[]{//left
+                size + X, size + Y, size + Z, texCoords[1].getX(), texCoords[1].getY(),
+                size + X, size + Y, 0.0f + Z, texCoords[2].getX(), texCoords[2].getY(),
+                size + X, 0.0f + Y, 0.0f + Z, texCoords[3].getX(), texCoords[3].getY(),
+                size + X, 0.0f + Y, size + Z, texCoords[0].getX(), texCoords[0].getY()});
         this.vertices.put(edges.TOP, new Float[]{//top
                 0.0f + X, 0.0f + Y, 0.0f + Z, texCoords[0].getX(), texCoords[0].getY(),
                 size + X, 0.0f + Y, 0.0f + Z, texCoords[1].getX(), texCoords[1].getY(),

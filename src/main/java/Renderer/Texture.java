@@ -7,15 +7,17 @@ import static Renderer.TextureAtlas.getWidth;
 
 public class Texture {
     //256
-    private float x1,y1,x2,y2;
+    private final float x1,y1,x2,y2;
 
     public Texture(int size, int index) {
         float width = (float)getWidth();
         float height = (float)getHeight();
+        int yIndex = (index / 32) + 1;
+
         x1 = ((index - 1) * size) / width;
-        y1 = (((height / size) - index) * size) / height;
+        y1 = (((height / size) - yIndex) * size) / height;
         x2 = (index * size) / width;
-        y2 = (height / size * size) / height;
+        y2 = (((height / size) - (yIndex - 1)) * size) / height;
         float a = 1;
     }
 

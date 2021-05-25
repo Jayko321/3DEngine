@@ -76,6 +76,10 @@ public class Renderer {
         CubeDistributor.assignToChunk(cube, chunkBuffer);
     }
 
+    public void drawCube(Cube cube){
+        CubeDistributor.assignToChunk(cube, chunkBuffer);
+    }
+
 
     public void drawCube(int x,int y,int z, Texture texture){
         Cube cube = new Cube(x,y,z,texture);

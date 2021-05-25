@@ -2,6 +2,7 @@ package Renderer;
 
 import org.lwjgl.stb.STBImage;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -15,9 +16,14 @@ public final class TextureAtlas {
     private static final int[] channels = new int[1];
 
     public TextureAtlas(String atlasPath) {
+        File file = new File(atlasPath);
+        if (!file.exists()){
+            return;
+        }
+
+
         STBImage.stbi_set_flip_vertically_on_load(true);
         ByteBuffer image = STBImage.stbi_load(atlasPath, width, height, channels, 0);
-
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

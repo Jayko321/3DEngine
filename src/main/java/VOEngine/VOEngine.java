@@ -12,6 +12,9 @@ import Callbacks.MouseCallback;
 import VOEngine.Camera.*;
 import Objects.Window;
 import Renderer.*;
+import imgui.ImGui;
+import imgui.app.Application;
+import imgui.app.Configuration;
 import org.lwjgl.opengl.GL46;
 
 import static Callbacks.KeyCallback.getKeys;
@@ -23,11 +26,12 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class VOEngine {
+public class VOEngine extends Application {
     public static Window Window;
     public static Shader Shader;
     public static Camera Camera;
     public static Renderer Renderer;
+    private boolean fpsCounter = false;
     private float lastFrame = 0, deltaTime = 0;
 
     public VOEngine() {
@@ -37,6 +41,16 @@ public class VOEngine {
         Camera = new Camera();
         Renderer  = new Renderer();
         init();
+    }
+
+    @Override
+    protected void configure(Configuration config) {
+        config.setTitle("Dear ImGui is Awesome!");
+    }
+
+    @Override
+    public void process() {
+        ImGui.text("Hello, World!");
     }
 
 
@@ -51,34 +65,42 @@ public class VOEngine {
     }
 
 
+    public void fpsCounter(){
+        if (fpsCounter){
+            float curFrame = (float) glfwGetTime();
+            deltaTime = curFrame - lastFrame;
+            lastFrame = curFrame;
+            System.out.println("Fps is " + (1 / deltaTime) + "\nFrame Time is " + (deltaTime*1000));
+        }
+    }
 
-    public void whileLoop(){
+
+    public void whileLoopFunc(){
 
     }
 
     public void start(){
         while (!glfwWindowShouldClose(getWindowPointer())) {
-            float curFrame = (float) glfwGetTime();
-            deltaTime = curFrame - lastFrame;
-            lastFrame = curFrame;
-            System.out.println("Fps is " + (1 / deltaTime) + "\nFrame Time is " + (deltaTime*1000));
+            fpsCounter();
             glfwPollEvents();
-
-            //начало отрисовки
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
             Shader.Use();
             Camera.Use();
             Camera.do_movement(getKeys(), deltaTime);
             Camera.mouse_movement(getPitch(), getYaw());
-            whileLoop();
+            whileLoopFunc();
             glfwSwapBuffers(getWindowPointer());
         }
         cleanup();
     }
 
+    public void enableFpsCounter(){
+        fpsCounter = true;
+    }
 
+    public void disableFpsCounter(){
+        fpsCounter = false;
+    }
 
     public void cleanup() {
         unbindBuffers();
@@ -106,7 +128,8 @@ public class VOEngine {
 
 
     public static void main(String[] args) {
-        new VOEngine().start();
+        launch(new VOEngine());
+//        new VOEngine().start();
 
     }
 }
